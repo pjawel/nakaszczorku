@@ -216,7 +216,7 @@ const PaperMenu = () => {
                     <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-black/10 to-transparent" />
                   </div>
                   <div className="absolute inset-0 bg-[#fdfbf6] border-r border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center">
-                    <img src={spreads[spreadIndex + 1][0]!} className="w-full h-full object-contain" alt="turn-back" />
+                    <img src={spreads[spreadIndex + 1][0]!} className="w-full h-full object-contain scale-x-[-1]" alt="turn-back" />
                     <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/10 to-transparent" />
                   </div>
                 </motion.div>
@@ -235,7 +235,7 @@ const PaperMenu = () => {
                     <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/10 to-transparent" />
                   </div>
                   <div className="absolute inset-0 bg-[#fdfbf6] border-l border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center">
-                    <img src={spreads[spreadIndex - 1][1]!} className="w-full h-full object-contain" alt="turn-back-prev" />
+                    <img src={spreads[spreadIndex - 1][1]!} className="w-full h-full object-contain scale-x-[-1]" alt="turn-back-prev" />
                     <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-black/10 to-transparent" />
                   </div>
                 </motion.div>
