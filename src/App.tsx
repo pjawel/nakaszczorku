@@ -174,22 +174,33 @@ const PaperMenu = () => {
           <div className="w-24 h-1 bg-rustic-brown mx-auto" />
         </div>
         
-        <div className="relative group max-w-5xl mx-auto perspective-2000">
-          <div className="relative aspect-[1.4/1] bg-white rounded-sm shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] flex preserve-3d">
+        <div 
+          className="relative group max-w-5xl mx-auto perspective-2000 px-4 md:px-0"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <motion.div 
+            onPanEnd={(_, info) => {
+              if (Math.abs(info.offset.x) > 50) {
+                if (info.offset.x < 0) next();
+                else prev();
+              }
+            }}
+            className="relative aspect-[0.7/1] md:aspect-[1.4/1] bg-white rounded-sm shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] flex preserve-3d"
+          >
             
             {/* Background Pages */}
             <div className="w-full h-full flex absolute inset-0 z-0">
-               <div className="w-1/2 h-full border-r border-black/5 bg-gradient-to-r from-[#fdfbf6] to-white p-4 md:p-8 relative">
+               <div className="w-full md:w-1/2 h-full border-r border-black/5 bg-gradient-to-r from-[#fdfbf6] to-white p-2 md:p-8 relative">
                   {(direction === 'prev' ? spreads[spreadIndex - 1]?.[0] : spreads[spreadIndex]?.[0]) && (
                     <img 
-                      src={direction === 'prev' ? spreads[spreadIndex - 1][0]! : spreads[spreadIndex][0]!} 
+                      src={direction === 'prev' ? spreads[spreadIndex - 1][0] : spreads[spreadIndex][0]} 
                       className="w-full h-full object-contain" 
                       alt="bg-left"
                     />
                   )}
-                  <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/10 to-transparent pointer-events-none" />
+                  <div className="absolute inset-y-0 right-0 w-8 md:w-12 bg-gradient-to-l from-black/10 to-transparent pointer-events-none" />
                </div>
-               <div className="w-1/2 h-full bg-gradient-to-l from-[#fdfbf6] to-white p-4 md:p-8 relative">
+               <div className="hidden md:block w-1/2 h-full bg-gradient-to-l from-[#fdfbf6] to-white p-8 relative">
                   {(direction === 'next' ? spreads[spreadIndex + 1]?.[1] : spreads[spreadIndex]?.[1]) && (
                     <img 
                       src={direction === 'next' ? (spreads[spreadIndex + 1]?.[1] || '') : (spreads[spreadIndex][1] || '')} 
@@ -208,17 +219,33 @@ const PaperMenu = () => {
                   initial={{ rotateY: 0 }}
                   animate={{ rotateY: -180 }}
                   transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1] }}
-                  style={{ transformOrigin: 'left center', left: '50%', width: '50%', zIndex: 100 }}
-                  className="absolute inset-y-0 preserve-3d"
+                  style={{ transformOrigin: 'left center', left: '50%', width: '100%', maxWidth: 'none', zIndex: 100 }}
+                  className="absolute inset-y-0 preserve-3d hidden md:block"
                 >
-                  <div className="absolute inset-0 bg-white border-l border-black/5 p-4 md:p-8 backface-hidden flex items-center justify-center">
+                  <div className="absolute inset-0 bg-white border-l border-black/5 p-4 md:p-8 backface-hidden flex items-center justify-center" style={{ width: '50%' }}>
                     <img src={spreads[spreadIndex][1]!} className="w-full h-full object-contain" alt="turn-front" />
                     <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-black/10 to-transparent" />
                   </div>
-                  <div className="absolute inset-0 bg-[#fdfbf6] border-r border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[#fdfbf6] border-r border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center" style={{ width: '50%' }}>
                     <img src={spreads[spreadIndex + 1][0]!} className="w-full h-full object-contain" alt="turn-back" />
                     <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/10 to-transparent" />
                   </div>
+                </motion.div>
+              )}
+
+              {/* Simple Fade for Mobile */}
+              {isAnimating && (
+                <motion.div 
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="md:hidden absolute inset-0 z-[100] bg-white pointer-events-none"
+                >
+                   <img 
+                    src={direction === 'next' ? (spreads[spreadIndex][1] || spreads[spreadIndex][0]) : (spreads[spreadIndex][0] || spreads[spreadIndex][1])} 
+                    className="w-full h-full object-contain" 
+                    alt="mobile-fade"
+                   />
                 </motion.div>
               )}
 
@@ -227,14 +254,14 @@ const PaperMenu = () => {
                   initial={{ rotateY: 0 }}
                   animate={{ rotateY: 180 }}
                   transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1] }}
-                  style={{ transformOrigin: 'right center', left: '0%', width: '50%', zIndex: 100 }}
-                  className="absolute inset-y-0 preserve-3d"
+                  style={{ transformOrigin: 'right center', left: '0%', width: '100%', maxWidth: 'none', zIndex: 100 }}
+                  className="absolute inset-y-0 preserve-3d hidden md:block"
                 >
-                  <div className="absolute inset-0 bg-white border-r border-black/5 p-4 md:p-8 backface-hidden flex items-center justify-center">
+                  <div className="absolute inset-0 bg-white border-r border-black/5 p-4 md:p-8 backface-hidden flex items-center justify-center" style={{ width: '50%', left: '0' }}>
                     <img src={spreads[spreadIndex][0]!} className="w-full h-full object-contain" alt="turn-front-prev" />
                     <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/10 to-transparent" />
                   </div>
-                  <div className="absolute inset-0 bg-[#fdfbf6] border-l border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[#fdfbf6] border-l border-black/5 p-4 md:p-8 backface-hidden rotate-y-180 flex items-center justify-center" style={{ width: '50%', left: '0' }}>
                     <img src={spreads[spreadIndex - 1][1]!} className="w-full h-full object-contain" alt="turn-back-prev" />
                     <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-black/10 to-transparent" />
                   </div>
@@ -247,17 +274,17 @@ const PaperMenu = () => {
             {!isAnimating && (
               <div className="absolute inset-0 z-[120] flex">
                 <div 
-                  className="w-1/2 h-full cursor-zoom-in group/page" 
+                  className="w-1/2 h-full cursor-zoom-in group/page relative" 
                   onClick={() => spreads[spreadIndex][0] && handleZoom(spreads[spreadIndex][0]!)}
                 >
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/page:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); prev(); }}>
+                  <div className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/page:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); prev(); }}>
                     <div className="p-3 bg-white/90 rounded-full shadow-lg text-rustic-brown cursor-pointer">
                       <ChevronLeft size={32} />
                     </div>
                   </div>
                 </div>
                 <div 
-                  className="w-1/2 h-full cursor-zoom-in group/page" 
+                  className="hidden md:block w-1/2 h-full cursor-zoom-in group/page relative" 
                   onClick={() => spreads[spreadIndex][1] && handleZoom(spreads[spreadIndex][1]!)}
                 >
                   <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/page:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); next(); }}>
@@ -268,7 +295,7 @@ const PaperMenu = () => {
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
 
           <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 flex gap-4 bg-white/60 backdrop-blur-md px-8 py-4 rounded-full border border-rustic-brown/10 z-[130] shadow-sm">
             {spreads.map((_, i) => (
