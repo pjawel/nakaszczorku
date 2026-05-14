@@ -809,16 +809,21 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+      }).catch(err => {
+        if (err.message === 'Failed to fetch') {
+          throw new Error('Błąd połączenia (Failed to fetch). Upewnij się, że scenariusz w Make.com jest włączony (ON) i nasłuchuje żądań.');
+        }
+        throw err;
       });
 
-      if (response.ok || response.status === 0) {
+      if (response.ok) {
         setStep('summary');
       } else {
         const errorText = await response.text().catch(() => 'Brak szczegółów błędu');
-        throw new Error(`Wystąpił błąd podczas wysyłania zamówienia (Status: ${response.status}). ${errorText}`);
+        throw new Error(`Błąd serwera (Status: ${response.status}). ${errorText}`);
       }
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Błąd połączenia z serwerem. Spróbuj ponownie później.');
+      alert(error instanceof Error ? error.message : 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.');
       setIsSending(false);
     }
   };
