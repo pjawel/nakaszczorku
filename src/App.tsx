@@ -19,7 +19,12 @@ import {
   MessageSquare,
   ArrowRight,
   Menu as MenuIcon,
-  X
+  X,
+  ShoppingCart,
+  Minus,
+  Plus,
+  Trash2,
+  CheckCircle2
 } from 'lucide-react';
 
 // --- Constants ---
@@ -55,9 +60,134 @@ const GALLERY_IMAGES = [
   'https://iili.io/BZt3BtV.md.jpg'
 ];
 
+const ORDER_MENU = [
+  {
+    category: "Zupy",
+    items: [
+      { id: "szurpa", name: "Szurpa", price: 22 },
+      { id: "charczo", name: "Charczo", price: 19 },
+      { id: "barszcz-ukr", name: "Barszcz ukraiński", price: 18 },
+      { id: "barszcz-piel", name: "Barszcz z pielmieni", price: 17 },
+      { id: "rosol-piel", name: "Rosół z pielmieni", price: 16 },
+      { id: "rosol-mak", name: "Rosół z makaronem", price: 10 },
+      { id: "barszcz-picie", name: "Barszcz do picia", price: 9 }
+    ]
+  },
+  {
+    category: "Dania główne",
+    items: [
+      { id: "poledwiczka", name: "Soczysta polędwiczka z warzywami w zestawie z opieczonymi ziemniaczkami i surówką", price: 42 },
+      { id: "kurczak-grill", name: "Grillowany filet kurczaka z frytkami i surówką", price: 38 },
+      { id: "schabowe", name: "Schabowe z ziemniakami i surówką", price: 33 }
+    ]
+  },
+  {
+    category: "Ryby z patelni",
+    description: "w zestawie z ziemniakami albo frytkami i surówką",
+    items: [
+      { id: "pstrog", name: "Pstrąg łososiowy", price: 34 },
+      { id: "dorsz", name: "Dorsz filet w panierce", price: 34 },
+      { id: "halibut", name: "Halibut", price: 42 },
+      { id: "losos", name: "Łosoś filet", price: 42 }
+    ]
+  },
+  {
+    category: "Placki ziemniaczane",
+    items: [
+      { id: "placki-gulasz", name: "z gulaszem", price: 27 },
+      { id: "placki-smietana", name: "ze śmietaną", price: 23 }
+    ]
+  },
+  {
+    category: "Krokiety z sosem",
+    items: [
+      { id: "krokiet-kurczak", name: "z kurczakiem i mozzarellą (2szt)", price: 25 },
+      { id: "krokiet-pieczarki", name: "z pieczarkami i mozzarellą (2szt)", price: 25 },
+      { id: "krokiet-szpinak", name: "ze szpinakiem i fetą (2szt)", price: 25 },
+      { id: "krokiet-kapusta", name: "z kapustą i grzybami (2szt)", price: 25 },
+      { id: "nalesniki-twarog", name: "Naleśniki z twarogiem (2szt)", price: 25 }
+    ]
+  },
+  {
+    category: "Czeburek z sosem",
+    items: [
+      { id: "czeburek-miesto", name: "z mięsem (wieprzowina)", price: 16 },
+      { id: "czeburek-kurczak-ser", name: "z kurczakiem i serem", price: 16 },
+      { id: "czeburek-kurczak-grzyby", name: "z kurczakiem i grzybami", price: 16 },
+      { id: "czeburek-wedzony", name: "z wędzonym serem i suszonymi pomidorami", price: 16 }
+    ]
+  },
+  {
+    category: "Pierogi",
+    items: [
+      { id: "pierogi-miks", name: "Miks (5 dowolnych pierogow)", price: 29 },
+      { id: "pierogi-miesto", name: "z mięsem", price: 28 },
+      { id: "pierogi-kurczak-ser", name: "z kurczakiem i serem", price: 24 },
+      { id: "pierogi-kurczak-meksyk", name: "z kurczakiem po meksykańsku", price: 24 },
+      { id: "pierogi-ruskie", name: "Ruskie", price: 24 },
+      { id: "pierogi-ruskie-boczek", name: "Rusek z boczkiem", price: 24 },
+      { id: "pierogi-kapusta-grzyby", name: "z kapustą i grzybami", price: 24 },
+      { id: "pierogi-pieczarki", name: "z pieczarkami", price: 24 },
+      { id: "pierogi-pieczarki-ser", name: "z pieczarkami i serem", price: 24 },
+      { id: "pierogi-szpinak-feta", name: "ze szpinakiem i fetą", price: 24 },
+      { id: "pierogi-soczewica", name: "z soczewicą wege", price: 25 },
+      { id: "pierogi-twarog", name: "z twarogiem", price: 23 },
+      { id: "pierogi-twarog-owoce", name: "z twarogiem i owocami", price: 25 },
+      { id: "pierogi-owoce", name: "z owocami", price: 25 }
+    ]
+  },
+  {
+    category: "Pielmieni",
+    items: [
+      { id: "pielmieni-miks", name: "Miks (15szt)", price: 32 },
+      { id: "pielmieni-wol-wieprz", name: "z wołowiną i wieprzowiną", price: 28 },
+      { id: "pielmieni-indyk-wol", name: "z indykiem i wołowiną", price: 28 },
+      { id: "pielmieni-soczewica-borowik", name: "z soczewicą i borowikiem", price: 27 },
+      { id: "pielmieni-borowik-pieczarka", name: "z borowikiem i pieczarką", price: 30 }
+    ]
+  },
+  {
+    category: "Chinkali",
+    items: [
+      { id: "chinkali-wol-wieprz", name: "z wołowiną i wieprzowiną", price: 35 }
+    ]
+  },
+  {
+    category: "Dla dzieci",
+    items: [
+      { id: "dziecko-schabowy", name: "Schabowe z kurczaka z ziemniakami i surówką", price: 33 },
+      { id: "dziecko-schabowy-frytki", name: "Schabowe z kurczaka z frytkami i surówką", price: 33 },
+      { id: "dziecko-naggetsy", name: "Frytki i nuggetsy", price: 25 },
+      { id: "dziecko-stripsy", name: "Stripsy z kurczaka i frytki", price: 30 },
+      { id: "dziecko-leniwe", name: "Pierogi leniwe (15szt)", price: 22 },
+      { id: "dziecko-twarog", name: "Pierogi z twarogiem", price: 23 },
+      { id: "dziecko-nalesniki-twarog", name: "Naleśniki z twarogiem (2szt)", price: 23 },
+      { id: "dziecko-nalesniki-nutella", name: "Naleśniki z nutellą albo dżemem (3szt)", price: 23 }
+    ]
+  },
+  {
+    category: "Napoje",
+    items: [
+      { id: "cola", name: "Cola, fanta, sprite", price: 8 },
+      { id: "sok", name: "Sok jabłko, pomarańcza, multiwitamina", price: 6 },
+      { id: "woda", name: "Woda gazowana, niegazowana", price: 5 }
+    ]
+  },
+  {
+    category: "Dodatki",
+    items: [
+      { id: "surowka", name: "surówka", price: 8 },
+      { id: "ziemniaki", name: "ziemniaki", price: 8 },
+      { id: "frytki", price: 10 }
+    ]
+  }
+];
+
+const webhookUrl = 'https://hook.eu1.make.com/5kir8yq9nvnzln131kr83bmarlcwe492';
+
 // --- Components ---
 
-const Navbar = () => {
+const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -86,6 +216,13 @@ const Navbar = () => {
             <a href="#menu" className="hover:text-rustic-accent transition-colors">Menu</a>
             <a href="#gallery" className="hover:text-rustic-accent transition-colors">Galeria</a>
             <a href="#contact" className="hover:text-rustic-accent transition-colors">Kontakt</a>
+            <button 
+              onClick={onOrderClick}
+              className="bg-rustic-accent text-white px-8 py-3 rounded-full hover:bg-rustic-dark transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              <ShoppingCart size={18} />
+              Zamów Online
+            </button>
             <a href="tel:789779658" className="bg-rustic-brown text-white px-8 py-3 rounded-full hover:bg-rustic-dark transition-all shadow-md hover:shadow-lg">
               789 779 658
             </a>
@@ -111,6 +248,13 @@ const Navbar = () => {
             <a href="#menu" onClick={() => setMobileMenuOpen(false)}>Menu</a>
             <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>Galeria</a>
             <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Kontakt</a>
+            <button 
+              onClick={() => { onOrderClick(); setMobileMenuOpen(false); }}
+              className="px-10 py-4 bg-rustic-accent text-white rounded-full flex items-center gap-2"
+            >
+              <ShoppingCart size={24} />
+              Zamów Online
+            </button>
             <a href="tel:789779658" className="mt-4 px-10 py-4 border-2 border-white rounded-full">789 779 658</a>
           </motion.div>
         )}
@@ -499,7 +643,7 @@ const Contact = () => (
   </section>
 );
 
-const Hero = () => (
+const Hero = ({ onOrderClick }: { onOrderClick: () => void }) => (
   <header className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
     <div className="absolute inset-0 z-0 text-white">
       <img 
@@ -528,9 +672,13 @@ const Hero = () => (
              Nasza Karta
              <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
           </a>
-          <a href="#contact" className="px-10 py-5 bg-white/10 backdrop-blur-md text-white border border-white/30 rounded-full font-medium hover:bg-white/20 transition-all">
+          <button 
+            onClick={onOrderClick}
+            className="px-10 py-5 bg-rustic-accent text-white rounded-full font-bold shadow-2xl hover:bg-rustic-dark transition-all flex items-center gap-3"
+          >
+            <ShoppingCart size={20} />
             Złóż zamówienie
-          </a>
+          </button>
         </div>
       </motion.div>
     </div>
@@ -588,12 +736,368 @@ const Footer = () => (
   </footer>
 );
 
+const OrderSystem = ({ onBack }: { onBack: () => void }) => {
+  const [cart, setCart] = useState<{ id: string, name: string, price: number, quantity: number }[]>([]);
+  const [step, setStep] = useState<'menu' | 'details' | 'summary'>('menu');
+  const [isSending, setIsSending] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({ 
+    name: '', 
+    phone: '', 
+    street: '', 
+    building: '', 
+    apartment: '', 
+    city: '', 
+    notes: '' 
+  });
+
+  const isPhoneValid = /^\d{9}$/.test(orderDetails.phone.replace(/\s/g, ''));
+
+  const addToCart = (item: any) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.id === item.id);
+      if (existing) {
+        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { ...item, quantity: 1 }];
+    });
+  };
+
+  const updateQuantity = (id: string, delta: number) => {
+    setCart(prev => prev.map(i => {
+      if (i.id === id) {
+        const newQty = Math.max(0, i.quantity + delta);
+        return { ...i, quantity: newQty };
+      }
+      return i;
+    }).filter(i => i.quantity > 0));
+  };
+
+  const removeFromCart = (id: string) => {
+    setCart(prev => prev.filter(i => i.id !== id));
+  };
+
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  const handleFinalize = async () => {
+    setIsSending(true);
+    try {
+      const payload = {
+        customer: orderDetails,
+        cart: cart,
+        total: total,
+        paymentMethod: 'Przy odbiorze',
+        timestamp: new Date().toLocaleString('pl-PL')
+      };
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setStep('summary');
+      } else {
+        throw new Error('Wystąpił błąd podczas wysyłania zamówienia do serwera.');
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Błąd połączenia z serwerem. Spróbuj ponownie później.');
+      setIsSending(false);
+    }
+  };
+
+  if (step === 'summary') {
+    return (
+      <div className="min-h-screen bg-rustic-cream py-32 px-6">
+        <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8 text-center">
+          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 size={48} />
+          </div>
+          <h2 className="text-4xl font-serif font-bold text-rustic-dark mb-4">Dziękujemy!</h2>
+          <p className="text-xl text-rustic-brown mb-8 font-serif italic text-balance">
+            Zamówienie zostało wysłane pomyślnie! Powiadomienie trafiło na telefon właściciela.
+          </p>
+          <div className="bg-rustic-beige/30 rounded-2xl p-6 text-left mb-8">
+            <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-rustic-accent">Szczegóły zamówienia:</h3>
+            <p className="mb-2"><strong>Imię:</strong> {orderDetails.name}</p>
+            <p className="mb-2"><strong>Telefon:</strong> {orderDetails.phone}</p>
+            <p className="mb-2"><strong>Adres:</strong> {orderDetails.street} {orderDetails.building}{orderDetails.apartment ? `/${orderDetails.apartment}` : ''}, {orderDetails.city}</p>
+            <p className="mb-6"><strong>Płatność:</strong> Przy odbiorze (Gotówka / Karta)</p>
+            <div className="border-t border-rustic-brown/10 pt-4">
+              {cart.map(item => (
+                <div key={item.id} className="flex justify-between text-sm mb-2">
+                  <span>{item.quantity}x {item.name}</span>
+                  <span>{item.price * item.quantity} zł</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-bold text-lg mt-4 border-t border-rustic-brown/20 pt-4">
+                <span>Suma:</span>
+                <span>{total} zł</span>
+              </div>
+            </div>
+          </div>
+          <button 
+            onClick={onBack}
+            className="px-10 py-4 bg-rustic-brown text-white rounded-full font-bold shadow-lg hover:bg-rustic-dark transition-all"
+          >
+            Wróć do strony głównej
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-rustic-cream pt-32 pb-20 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10">
+        {/* Main Menu Area */}
+        <div className="lg:w-2/3">
+          <div className="flex items-center gap-4 mb-8">
+            <button onClick={onBack} className="p-2 hover:bg-rustic-beige rounded-full transition-colors text-rustic-brown">
+              <ChevronLeft size={24} />
+            </button>
+            <h1 className="text-4xl font-serif font-bold text-rustic-dark">Zamówienie Online</h1>
+          </div>
+
+          {step === 'menu' ? (
+            <div className="space-y-12">
+              {ORDER_MENU.map((cat, idx) => (
+                <div key={idx}>
+                  <div className="mb-6 border-b border-rustic-brown/10 pb-2">
+                    <h2 className="text-2xl font-serif font-bold text-rustic-brown">{cat.category}</h2>
+                    {cat.description && <p className="text-sm font-serif italic text-rustic-brown/60">{cat.description}</p>}
+                  </div>
+                  <div className="grid gap-4">
+                    {cat.items.map(item => (
+                      <div 
+                        key={item.id} 
+                        className="bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between group"
+                      >
+                        <div className="flex-1 pr-4">
+                          <h3 className="font-serif font-medium text-rustic-dark text-lg">{item.name}</h3>
+                          <p className="text-rustic-accent font-bold">{item.price} zł</p>
+                        </div>
+                        <button 
+                          onClick={() => addToCart(item)}
+                          className="w-10 h-10 bg-rustic-beige text-rustic-brown rounded-full flex items-center justify-center hover:bg-rustic-brown hover:text-white transition-all shadow-sm"
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-3xl shadow-xl p-8">
+              <h2 className="text-2xl font-serif font-bold text-rustic-dark mb-8">Dane do dostawy</h2>
+              <div className="grid gap-6">
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Twoje Imię</label>
+                  <input 
+                    type="text" 
+                    value={orderDetails.name}
+                    onChange={(e) => setOrderDetails(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                    placeholder="Wpisz swoje imię..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Numer Telefonu</label>
+                  <input 
+                    type="tel" 
+                    value={orderDetails.phone}
+                    onChange={(e) => setOrderDetails(prev => ({ ...prev, phone: e.target.value }))}
+                    className={`w-full bg-rustic-beige/30 border-2 ${orderDetails.phone && !isPhoneValid ? 'border-red-400' : 'border-transparent'} focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif`}
+                    placeholder="Wpisz 9 cyfr..."
+                  />
+                  {orderDetails.phone && !isPhoneValid && (
+                    <p className="text-red-500 text-xs mt-1 font-serif">Numer telefonu musi składać się z dokładnie 9 cyfr.</p>
+                  )}
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Ulica</label>
+                    <input 
+                      type="text" 
+                      value={orderDetails.street}
+                      onChange={(e) => setOrderDetails(prev => ({ ...prev, street: e.target.value }))}
+                      className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                      placeholder="Nazwa ulicy..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Nr budynku</label>
+                      <input 
+                        type="text" 
+                        value={orderDetails.building}
+                        onChange={(e) => setOrderDetails(prev => ({ ...prev, building: e.target.value }))}
+                        className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                        placeholder="Np. 9C"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Nr lokalu</label>
+                      <input 
+                        type="text" 
+                        value={orderDetails.apartment}
+                        onChange={(e) => setOrderDetails(prev => ({ ...prev, apartment: e.target.value }))}
+                        className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                        placeholder="Opcjonalnie"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Miasto</label>
+                  <input 
+                    type="text" 
+                    value={orderDetails.city}
+                    onChange={(e) => setOrderDetails(prev => ({ ...prev, city: e.target.value }))}
+                    className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                    placeholder="Miejscowość..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Uwagi (opcjonalnie)</label>
+                  <input 
+                    type="text" 
+                    value={orderDetails.notes}
+                    onChange={(e) => setOrderDetails(prev => ({ ...prev, notes: e.target.value }))}
+                    className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
+                    placeholder="Dodatkowe informacje..."
+                  />
+                </div>
+
+                <div className="bg-rustic-beige/20 p-6 rounded-2xl border border-rustic-brown/10">
+                  <div className="flex items-center gap-3 text-rustic-dark mb-2">
+                    <CheckCircle2 size={20} className="text-rustic-accent" />
+                    <span className="font-serif font-bold italic">Metoda płatności</span>
+                  </div>
+                  <p className="text-sm text-rustic-brown font-serif">
+                    Płatność odbywa się **wyłącznie przy odbiorze** zamówienia. Możesz zapłacić gotówką lub kartą u dostawcy.
+                  </p>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button 
+                    onClick={() => setStep('menu')}
+                    disabled={isSending}
+                    className="flex-1 py-4 border-2 border-rustic-brown text-rustic-brown rounded-full font-bold hover:bg-rustic-beige transition-all disabled:opacity-50"
+                  >
+                    Wróć do menu
+                  </button>
+                  <button 
+                    onClick={handleFinalize}
+                    disabled={
+                      isSending ||
+                      !orderDetails.name || 
+                      !isPhoneValid || 
+                      !orderDetails.street || 
+                      !orderDetails.building || 
+                      !orderDetails.city
+                    }
+                    className="flex-[2] py-4 bg-rustic-brown text-white rounded-full font-bold hover:bg-rustic-dark transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isSending ? (
+                      <>
+                        <motion.div 
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                        />
+                        Wysyłanie...
+                      </>
+                    ) : (
+                      `Finalizuj zamówienie (${total} zł)`
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar Cart Area */}
+        <div className="lg:w-1/3">
+          <div className="bg-white sticky top-32 rounded-3xl shadow-xl p-8 border border-rustic-brown/5 overflow-hidden">
+            <div className="flex items-center gap-2 mb-6">
+              <ShoppingCart className="text-rustic-accent" size={24} />
+              <h2 className="text-xl font-serif font-bold text-rustic-dark">Twój Koszyk</h2>
+            </div>
+
+            <div className="max-h-[50vh] overflow-y-auto mb-8 pr-2 custom-scrollbar">
+              {cart.length === 0 ? (
+                <div className="text-center py-10">
+                  <p className="text-rustic-brown/40 italic font-serif">Twój koszyk jest pusty...</p>
+                </div>
+              ) : (
+                <div className="grid gap-6">
+                  {cart.map(item => (
+                    <div key={item.id} className="flex flex-col gap-2 border-b border-rustic-brown/5 pb-4">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="font-serif font-medium text-rustic-dark leading-tight">{item.name}</h4>
+                        <button onClick={() => removeFromCart(item.id)} className="text-red-400 hover:text-red-600 transition-colors">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center bg-rustic-beige/50 rounded-full px-3 py-1 gap-4">
+                          <button onClick={() => updateQuantity(item.id, -1)} className="hover:text-rustic-accent">
+                            <Minus size={14} />
+                          </button>
+                          <span className="font-bold text-sm min-w-[20px] text-center">{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, 1)} className="hover:text-rustic-accent">
+                            <Plus size={14} />
+                          </button>
+                        </div>
+                        <span className="font-bold text-rustic-brown">{item.price * item.quantity} zł</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-rustic-brown/20 pt-6">
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-rustic-brown uppercase tracking-widest text-xs font-bold">Łącznie</span>
+                <span className="text-2xl font-serif font-bold text-rustic-dark">{total} zł</span>
+              </div>
+              
+              {step === 'menu' && (
+                <button 
+                  onClick={() => setStep('details')}
+                  disabled={cart.length === 0}
+                  className="w-full py-4 bg-rustic-accent text-white rounded-full font-bold shadow-xl hover:bg-rustic-dark transition-all disabled:opacity-50 disabled:grayscale"
+                >
+                  Przejdź do dostawy
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
+  const [view, setView] = useState<'home' | 'order'>('home');
+
+  if (view === 'order') {
+    return <OrderSystem onBack={() => setView('home')} />;
+  }
+
   return (
     <div className="min-h-screen bg-rustic-cream selection:bg-rustic-brown selection:text-white font-serif scroll-smooth">
-      <Navbar />
+      <Navbar onOrderClick={() => setView('order')} />
       <main>
-        <Hero />
+        <Hero onOrderClick={() => setView('order')} />
         
         <section className="py-32 px-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-dot-pattern opacity-[0.03] pointer-events-none" />
@@ -628,6 +1132,27 @@ export default function App() {
         </section>
 
         <PaperMenu />
+        
+        <section className="py-24 bg-white">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+             <div className="bg-rustic-beige/50 p-12 md:p-20 rounded-[3rem] border border-rustic-brown/10 shadow-inner">
+                <UtensilsCrossed className="mx-auto mb-8 text-rustic-accent" size={48} />
+                <h2 className="text-4xl md:text-5xl font-serif font-bold text-rustic-dark mb-6">Zgłodniałeś?</h2>
+                <p className="text-xl text-rustic-brown mb-10 font-serif italic max-w-2xl mx-auto">
+                  Zamów nasze domowe przysmaki bezpośrednio do swojego domu. Świeże, gorące i lepione z pasją.
+                </p>
+                <button 
+                  onClick={() => setView('order')}
+                  className="px-12 py-6 bg-rustic-accent text-white rounded-full font-bold text-xl shadow-2xl hover:bg-rustic-dark transition-all flex items-center gap-4 mx-auto group"
+                >
+                  <ShoppingCart size={24} className="group-hover:scale-110 transition-transform" />
+                  Przejdź do zamawiania
+                  <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+                </button>
+             </div>
+          </div>
+        </section>
+
         <Gallery />
         <Reviews />
         <Contact />
