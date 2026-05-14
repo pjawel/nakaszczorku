@@ -782,11 +782,25 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
     setIsSending(true);
     try {
       const payload = {
-        customer: orderDetails,
-        cart: cart,
-        total: total,
-        paymentMethod: 'Przy odbiorze',
-        timestamp: new Date().toLocaleString('pl-PL')
+        klient: {
+          imie: orderDetails.name,
+          telefon: orderDetails.phone,
+          ulica: orderDetails.street,
+          numer_budynku: orderDetails.building,
+          numer_lokalu: orderDetails.apartment || 'brak',
+          miasto: orderDetails.city,
+          uwagi: orderDetails.notes || 'brak'
+        },
+        produkty: cart.map(item => ({
+          danie: item.name,
+          ilosc: item.quantity,
+          cena_jednostkowa: item.price,
+          suma_pozycji: item.price * item.quantity
+        })),
+        podsumowanie_zamowienia: cart.map(item => `${item.quantity}x ${item.name}`).join(', '),
+        suma_calkowita: total,
+        metoda_platnosci: 'Przy odbiorze',
+        data_zamowienia: new Date().toLocaleString('pl-PL')
       };
 
       const response = await fetch(webhookUrl, {
