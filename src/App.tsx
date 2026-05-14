@@ -797,10 +797,11 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
         body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
+      if (response.ok || response.status === 0) {
         setStep('summary');
       } else {
-        throw new Error('Wystąpił błąd podczas wysyłania zamówienia do serwera.');
+        const errorText = await response.text().catch(() => 'Brak szczegółów błędu');
+        throw new Error(`Wystąpił błąd podczas wysyłania zamówienia (Status: ${response.status}). ${errorText}`);
       }
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Błąd połączenia z serwerem. Spróbuj ponownie później.');
