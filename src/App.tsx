@@ -173,8 +173,8 @@ const ORDER_MENU = [
       { id: "sprite", name: "Sprite", price: 8 },
       { id: "sok-j", name: "Sok jabłkowy", price: 6 },
       { id: "sok-p", name: "Sok pomarańczowy", price: 6 },
-      { id: "sok-m", name: "Sok multiwitamina", price: 6 }
-      { id: "woda-gaz", name: "Woda gazowana", price: 5 }
+      { id: "sok-m", name: "Sok multiwitamina", price: 6 },
+      { id: "woda-gaz", name: "Woda gazowana", price: 5 },
       { id: "woda-ngaz", name: "Woda niegazowana", price: 5 }
     ]
   },
