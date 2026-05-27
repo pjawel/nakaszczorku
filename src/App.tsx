@@ -94,62 +94,62 @@ const ORDER_MENU = [
   {
     category: "Placki ziemniaczane",
     items: [
-      { id: "placki-gulasz", name: "z gulaszem", price: 27 },
-      { id: "placki-smietana", name: "ze śmietaną", price: 23 }
+      { id: "placki-gulasz", name: "Placki ziemniaczane z gulaszem", price: 27 },
+      { id: "placki-smietana", name: "Placki ziemniaczane ze śmietaną", price: 23 }
     ]
   },
   {
     category: "Krokiety z sosem",
     items: [
-      { id: "krokiet-kurczak", name: "z kurczakiem i mozzarellą (2szt)", price: 25 },
-      { id: "krokiet-pieczarki", name: "z pieczarkami i mozzarellą (2szt)", price: 25 },
-      { id: "krokiet-szpinak", name: "ze szpinakiem i fetą (2szt)", price: 25 },
-      { id: "krokiet-kapusta", name: "z kapustą i grzybami (2szt)", price: 25 },
+      { id: "krokiet-kurczak", name: "Krokiety z kurczakiem i mozzarellą (2szt)", price: 25 },
+      { id: "krokiet-pieczarki", name: "Krokiety z pieczarkami i mozzarellą (2szt)", price: 25 },
+      { id: "krokiet-szpinak", name: "Krokiety ze szpinakiem i fetą (2szt)", price: 25 },
+      { id: "krokiet-kapusta", name: "Krokiety z kapustą i grzybami (2szt)", price: 25 },
       { id: "nalesniki-twarog", name: "Naleśniki z twarogiem (2szt)", price: 25 }
     ]
   },
   {
     category: "Czeburek z sosem",
     items: [
-      { id: "czeburek-miesto", name: "z mięsem (wieprzowina)", price: 16 },
-      { id: "czeburek-kurczak-ser", name: "z kurczakiem i serem", price: 16 },
-      { id: "czeburek-kurczak-grzyby", name: "z kurczakiem i grzybami", price: 16 },
-      { id: "czeburek-wedzony", name: "z wędzonym serem i suszonymi pomidorami", price: 16 }
+      { id: "czeburek-miesto", name: "Czeburek z mięsem (wieprzowina)", price: 16 },
+      { id: "czeburek-kurczak-ser", name: "Czeburek z kurczakiem i serem", price: 16 },
+      { id: "czeburek-kurczak-grzyby", name: "Czeburek z kurczakiem i grzybami", price: 16 },
+      { id: "czeburek-wedzony", name: "Czeburek z wędzonym serem i suszonymi pomidorami", price: 16 }
     ]
   },
   {
     category: "Pierogi",
     items: [
       { id: "pierogi-miks", name: "Miks (5 dowolnych pierogow)", price: 29 },
-      { id: "pierogi-miesto", name: "z mięsem", price: 28 },
-      { id: "pierogi-kurczak-ser", name: "z kurczakiem i serem", price: 24 },
-      { id: "pierogi-kurczak-meksyk", name: "z kurczakiem po meksykańsku", price: 24 },
-      { id: "pierogi-ruskie", name: "Ruskie", price: 24 },
+      { id: "pierogi-miesto", name: "Pierogi z mięsem", price: 28 },
+      { id: "pierogi-kurczak-ser", name: "Pierogi z kurczakiem i serem", price: 24 },
+      { id: "pierogi-kurczak-meksyk", name: "Pierogi z kurczakiem po meksykańsku", price: 24 },
+      { id: "pierogi-ruskie", name: "Pierogi ruskie", price: 24 },
       { id: "pierogi-ruskie-boczek", name: "Rusek z boczkiem", price: 24 },
-      { id: "pierogi-kapusta-grzyby", name: "z kapustą i grzybami", price: 24 },
-      { id: "pierogi-pieczarki", name: "z pieczarkami", price: 24 },
-      { id: "pierogi-pieczarki-ser", name: "z pieczarkami i serem", price: 24 },
-      { id: "pierogi-szpinak-feta", name: "ze szpinakiem i fetą", price: 24 },
-      { id: "pierogi-soczewica", name: "z soczewicą wege", price: 25 },
-      { id: "pierogi-twarog", name: "z twarogiem", price: 23 },
-      { id: "pierogi-twarog-owoce", name: "z twarogiem i owocami", price: 25 },
-      { id: "pierogi-owoce", name: "z owocami", price: 25 }
+      { id: "pierogi-kapusta-grzyby", name: "Pierogi z kapustą i grzybami", price: 24 },
+      { id: "pierogi-pieczarki", name: "Pierogi z pieczarkami", price: 24 },
+      { id: "pierogi-pieczarki-ser", name: "Pierogi z pieczarkami i serem", price: 24 },
+      { id: "pierogi-szpinak-feta", name: "Pierogi ze szpinakiem i fetą", price: 24 },
+      { id: "pierogi-soczewica", name: "Pierogi z soczewicą (wege)", price: 25 },
+      { id: "pierogi-twarog", name: "Pierogi z twarogiem", price: 23 },
+      { id: "pierogi-twarog-owoce", name: "Pierogi z twarogiem i owocami", price: 25 },
+      { id: "pierogi-owoce", name: "Pierogi z owocami", price: 25 }
     ]
   },
   {
     category: "Pielmieni",
     items: [
-      { id: "pielmieni-miks", name: "Miks (15szt)", price: 32 },
-      { id: "pielmieni-wol-wieprz", name: "z wołowiną i wieprzowiną", price: 28 },
-      { id: "pielmieni-indyk-wol", name: "z indykiem i wołowiną", price: 28 },
-      { id: "pielmieni-soczewica-borowik", name: "z soczewicą i borowikiem", price: 27 },
-      { id: "pielmieni-borowik-pieczarka", name: "z borowikiem i pieczarką", price: 30 }
+      { id: "pielmieni-miks", name: "Miks pielmieni (15szt)", price: 32 },
+      { id: "pielmieni-wol-wieprz", name: "Pielmieni z wołowiną i wieprzowiną", price: 28 },
+      { id: "pielmieni-indyk-wol", name: "Pielmieni z indykiem i wołowiną", price: 28 },
+      { id: "pielmieni-soczewica-borowik", name: "Pielmieni z soczewicą i borowikiem", price: 27 },
+      { id: "pielmieni-borowik-pieczarka", name: "Pielmieni z borowikiem i pieczarką", price: 30 }
     ]
   },
   {
     category: "Chinkali",
     items: [
-      { id: "chinkali-wol-wieprz", name: "z wołowiną i wieprzowiną", price: 35 }
+      { id: "chinkali-wol-wieprz", name: "Chinkali z wołowiną i wieprzowiną", price: 35 }
     ]
   },
   {
@@ -168,9 +168,14 @@ const ORDER_MENU = [
   {
     category: "Napoje",
     items: [
-      { id: "cola", name: "Cola, fanta, sprite", price: 8 },
-      { id: "sok", name: "Sok jabłko, pomarańcza, multiwitamina", price: 6 },
-      { id: "woda", name: "Woda gazowana, niegazowana", price: 5 }
+      { id: "cola", name: "Cola", price: 8 },
+      { id: "fanta", name: "Fanta", price: 8 },
+      { id: "sprite", name: "Sprite", price: 8 },
+      { id: "sok-j", name: "Sok jabłkowy", price: 6 },
+      { id: "sok-p", name: "Sok pomarańczowy", price: 6 },
+      { id: "sok-m", name: "Sok multiwitamina", price: 6 }
+      { id: "woda-gaz", name: "Woda gazowana", price: 5 }
+      { id: "woda-ngaz", name: "Woda niegazowana", price: 5 }
     ]
   },
   {
