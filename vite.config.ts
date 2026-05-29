@@ -6,10 +6,10 @@ import {defineConfig, loadEnv} from 'vite';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   
-  // In Cloud Run (AI Studio preview environment) or during local development, serve from root '/'.
-  // For GitHub Pages production builds, serve from the subpath '/nakaszczorku/'.
-  const isCloudRun = !!process.env.K_SERVICE || !!process.env.PORT || mode === 'development';
-  const base = isCloudRun ? '/' : '/nakaszczorku/';
+  // In development, serve from root '/'.
+  // For production builds, serve using relative paths './' to work perfectly
+  // on both the custom root domain (pierogarniawkaszczorku.pl) and subpaths (GitHub Pages).
+  const base = mode === 'development' ? '/' : './';
 
   return {
     base,
