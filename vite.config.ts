@@ -5,8 +5,14 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  
+  // In Cloud Run (AI Studio preview environment) or during local development, serve from root '/'.
+  // For GitHub Pages production builds, serve from the subpath '/nakaszczorku/'.
+  const isCloudRun = !!process.env.K_SERVICE || !!process.env.PORT || mode === 'development';
+  const base = isCloudRun ? '/' : '/nakaszczorku/';
+
   return {
-    base: '/nakaszczorku/',
+    base,
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
