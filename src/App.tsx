@@ -41,13 +41,13 @@ const MENU_IMAGES = [
 ];
 
 const GALLERY_IMAGES = [
-  'https://iili.io/BZtxBDu.md.jpg',
+  'https://i.ibb.co/N6rFPRNb/490098609-1133131435278438-9034799108915560156-n.jpg',
+  'https://i.ibb.co/Z1cbh81L/484545601-1108578554400393-1007995210073826491-n.jpg',
+  'https://i.ibb.co/qSmRypH/490958902-1133131831945065-709802125607087134-n.jpg',
+  'https://i.ibb.co/0RQ9cFhw/491777589-1133133478611567-6418680933429127759-n.jpg',
+  'https://i.ibb.co/CKWLgKHK/490744091-1133132208611694-2420069354154011641-n.jpg',
+  'https://i.ibb.co/FLWQtSHY/490699574-1133359301922318-8734503214837800421-n.jpg',
   'https://iili.io/BZtnTLx.md.jpg',
-  'https://iili.io/BZtnIXj.md.jpg',
-  'https://iili.io/BZtnzzb.md.jpg',
-  'https://iili.io/BZtnomu.md.jpg',
-  'https://iili.io/BZtnR1V.md.jpg',
-  'https://iili.io/BZt23Ip.md.jpg',
   'https://iili.io/BZt2YG9.md.jpg',
   'https://iili.io/BZt2w6F.md.jpg',
   'https://iili.io/BZt2eaa.md.jpg',
