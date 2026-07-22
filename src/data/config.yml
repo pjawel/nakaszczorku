@@ -1,0 +1,28 @@
+info:
+  title: Pierogarnia na Kaszczorku
+  phone: 789 779 658
+  address:
+    street: Dożynkowa 9C
+    city: Toruń
+  hours: 11:00-19:00
+  facebookUrl: https://www.facebook.com/pierogarnianakaszczorku
+  facebookReviewsUrl: https://www.facebook.com/pierogarnianakaszczorku/reviews/?id=100057447759306&sk=reviews
+  googleMapsEmbedUrl: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2400.669197835833!2d18.697466499999997!3d53.0083322!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ccb100d560067%3A0xb324e78759e1080a!2sDo%C5%BCynkowa%209C%2C%2087-162%20Toru%C5%84!5e0!3m2!1spl!2spl!4v1784714568437!5m2!1spl!2spl
+hero:
+  subtitle: Witamy w Pierogarni
+  title_line1: "Domowa tradycja "
+  title_line2: lepiona ręcznie.
+  bg_image: https://1s4oyld5dc.ucarecd.net/5cef6b74-fab3-488f-b9a1-578a54abe22c/
+story:
+  title: Więcej niż kulinaria. To nasze życie.
+  subtitle: " Nasza Historia"
+  paragraph1: „Dla nas każda lepiona sztuka to osobna historia. Nie uznajemy
+    skrótów, dlatego składniki wybieramy tak, jakbyśmy robili je dla własnej
+    rodziny.”
+  paragraph2: Kaszczorek to miejsce, gdzie czas płynie wolniej. Nasza pierogarnia
+    oddaje ten klimat – jest swojsko, smacznie i zawsze z uśmiechem.
+  main_image: https://1s4oyld5dc.ucarecd.net/dd7ac215-05a1-4272-989f-712536f1658c/
+review:
+  quote: '"Najlepsze pierogi jakie jadłem w Toruniu! Czuć, że są robione z sercem
+    i tradycją. Kaszczorek ma swój kulinarny skarb, do którego wracamy całą
+    rodziną."'
