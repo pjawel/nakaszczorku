@@ -25,10 +25,6 @@ collections:
         label: "Zawartość i Menu Pierogarni"
         name: "site_config"
         fields:
-          - label: "URL Webhooka (Make.com)"
-            name: "webhookUrl"
-            widget: "string"
-
           - label: "Informacje kontaktowe"
             name: "info"
             widget: "object"

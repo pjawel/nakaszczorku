@@ -29,35 +29,35 @@ import {
 
 // --- Constants ---
 const MENU_IMAGES = [
-  'https://iili.io/BZtKbwv.md.jpg',
-  'https://iili.io/BZtKmtR.md.jpg',
-  'https://iili.io/BZtKynp.md.jpg',
-  'https://iili.io/BZtKt9a.md.jpg',
-  'https://iili.io/BZtfdFt.md.jpg',
-  'https://iili.io/BZtfqNf.md.jpg',
-  'https://iili.io/BZtfxPS.md.jpg',
-  'https://iili.io/BZtfoV2.md.jpg',
-  'https://iili.io/BZtfnol.md.jpg'
+  '/uploads/menu1',
+  '/uploads/menu2',
+  '/uploads/menu3',
+  '/uploads/menu4',
+  '/uploads/menu5',
+  '/uploads/menu6',
+  '/uploads/menu7',
+  '/uploads/menu8',
+  '/uploads/menu9'
 ];
 
 const GALLERY_IMAGES = [
-  'https://i.ibb.co/N6rFPRNb/490098609-1133131435278438-9034799108915560156-n.jpg',
-  'https://i.ibb.co/Z1cbh81L/484545601-1108578554400393-1007995210073826491-n.jpg',
-  'https://i.ibb.co/qSmRypH/490958902-1133131831945065-709802125607087134-n.jpg',
-  'https://i.ibb.co/0RQ9cFhw/491777589-1133133478611567-6418680933429127759-n.jpg',
-  'https://i.ibb.co/CKWLgKHK/490744091-1133132208611694-2420069354154011641-n.jpg',
-  'https://i.ibb.co/FLWQtSHY/490699574-1133359301922318-8734503214837800421-n.jpg',
-  'https://iili.io/BZtnTLx.md.jpg',
-  'https://iili.io/BZt2YG9.md.jpg',
-  'https://iili.io/BZt2w6F.md.jpg',
-  'https://iili.io/BZt2eaa.md.jpg',
-  'https://iili.io/BZt2Ujp.md.jpg',
-  'https://iili.io/BZt2Q8G.md.jpg',
-  'https://iili.io/BZt3dFe.md.jpg',
-  'https://iili.io/BZt32cu.md.jpg',
-  'https://iili.io/BZt39M7.md.jpg',
-  'https://iili.io/BZt3K9j.md.jpg',
-  'https://iili.io/BZt3BtV.md.jpg'
+  '/uploads/g1.jpg',
+  '/uploads/g2.jpg',
+  '/uploads/g3.jpg',
+  '/uploads/g4.jpg',
+  '/uploads/g5.jpg',
+  '/uploads/g6.jpg',
+  '/uploads/g7.jpg',
+  '/uploads/g8.jpg',
+  '/uploads/g9.jpg',
+  '/uploads/g10.jpg',
+  '/uploads/g11.jpg',
+  '/uploads/g12.jpg',
+  '/uploads/g13.jpg',
+  '/uploads/g14.jpg',
+  '/uploads/g15.jpg',
+  '/uploads/g16.jpg',
+  '/uploads/g17.jpg'
 ];
 
 const ORDER_MENU = [
