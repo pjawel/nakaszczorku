@@ -1,22 +1,21 @@
-# GitHub repository configuration
 backend:
   name: github
-  repo: pjawel/nakaszczorku # Your GitHub username/repo
-  branch: main # Change to 'master' if your repo default branch is master
+  repo: pjawel/nakaszczorku # Your GitHub username and repository
+  branch: main             # Change to 'master' if your repo's main branch is master
   
-  # OAuth Authentication Gateway URL (Required for GitHub Pages)
-  # Replace with your deployed OAuth proxy URL (e.g. Snet, Vercel Decap OAuth, or Cloudflare Worker)
-  # base_url: https://your-oauth-proxy.vercel.app
+  # Cloudflare Worker OAuth Proxy Base URL (without the trailing /callback)
+  base_url: https://young-frog-f195.pjawel5.workers.dev
+  auth_endpoint: auth
 
-# Enable local proxy server during local development (npx decap-server)
+# Enable local testing proxy when running 'npx decap-server' locally
 local_backend: true
 
-# Media upload paths
+# Media paths
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  # Collection for general site metadata
+  # General page metadata
   - name: "pages"
     label: "Strony"
     files:
@@ -27,7 +26,7 @@ collections:
           - { label: "Nazwa", name: "name", widget: "string" }
           - { label: "Opis", name: "description", widget: "text" }
 
-  # Collection for Menu / Pierogi
+  # Menu / Pierogi collection
   - name: "menu"
     label: "Menu (Pierogi)"
     folder: "src/content/menu"
