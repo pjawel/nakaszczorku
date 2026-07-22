@@ -5,7 +5,7 @@
 # 1. Konfiguracja backendu (połączenie z GitHub)
 backend:
   name: github
-  repo: TWOJA_NAZWA_UZYTKOWNIKA/NAZWA_REPOZYTORIUM # <-- Zmień na nazwę swojego repozytorium
+  repo: pjawel/nakaszczorku # <-- Zmień na nazwę swojego repozytorium
   branch: main # lub master
 
 # 2. Folder na przesłane zdjęcia/pliki
