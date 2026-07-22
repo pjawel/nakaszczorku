@@ -3,9 +3,8 @@
 # ==========================================
 
 backend:
-  name: github
-  repo: pjawel/nakaszczorku # <-- Zmień na własne repozytorium
-  branch: main
+  name: git-gateway
+  branch: main # lub master
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
