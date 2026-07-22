@@ -6,9 +6,88 @@
     <title>Content Management System</title>
     <!-- Netlify Identity Widget for Authentication -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- React (needed to define custom preview components below) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   </head>
   <body>
     <!-- Decap CMS Core Script -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+    <!-- Custom preview for the "site_config" file (collection: settings) -->
+    <script>
+      var h = React.createElement;
+
+      function PreviewImage(props) {
+        if (!props.src) return null;
+        var src = props.getAsset ? props.getAsset(props.src) : props.src;
+        return h('img', {
+          src: src,
+          style: { maxWidth: '200px', margin: '4px', borderRadius: '8px' }
+        });
+      }
+
+      function SiteConfigPreview(props) {
+        var entry = props.entry;
+        var getAsset = props.getAsset;
+        var data = entry.get('data');
+        if (!data) return h('div', {}, 'Ładowanie podglądu...');
+
+        var info = data.get('info');
+        var hero = data.get('hero');
+        var story = data.get('story');
+        var review = data.get('review');
+        var menuImages = data.get('menu_images');
+        var galleryImages = data.get('gallery_images');
+
+        return h('div', { style: { fontFamily: 'sans-serif', padding: '24px', maxWidth: '900px', margin: '0 auto' } },
+          h('h1', {}, (info && info.get('title')) || 'Pierogarnia na Kaszczorku'),
+
+          hero && h('div', { style: { marginBottom: '24px' } },
+            h('h2', {}, [hero.get('title_line1'), hero.get('title_line2')].filter(Boolean).join(' ')),
+            h('p', {}, hero.get('subtitle')),
+            hero.get('bg_image') && h(PreviewImage, { src: hero.get('bg_image'), getAsset: getAsset })
+          ),
+
+          story && h('div', { style: { marginBottom: '24px' } },
+            h('h3', {}, story.get('title')),
+            h('p', {}, story.get('paragraph1')),
+            h('p', {}, story.get('paragraph2')),
+            story.get('main_image') && h(PreviewImage, { src: story.get('main_image'), getAsset: getAsset })
+          ),
+
+          review && review.get('quote') && h('blockquote', { style: { fontStyle: 'italic' } }, review.get('quote')),
+
+          info && h('div', { style: { marginTop: '24px' } },
+            h('h3', {}, 'Kontakt'),
+            h('p', {}, 'Tel: ' + (info.get('phone') || '')),
+            h('p', {}, 'Godziny: ' + (info.get('hours') || ''))
+          ),
+
+          menuImages && menuImages.size > 0 && h('div', { style: { marginTop: '24px' } },
+            h('h3', {}, 'Skany menu'),
+            h('div', { style: { display: 'flex', flexWrap: 'wrap' } },
+              menuImages.toJS().map(function (item, i) {
+                var src = typeof item === 'string' ? item : (item && (item.image || item.url));
+                return h(PreviewImage, { key: i, src: src, getAsset: getAsset });
+              })
+            )
+          ),
+
+          galleryImages && galleryImages.size > 0 && h('div', { style: { marginTop: '24px' } },
+            h('h3', {}, 'Galeria'),
+            h('div', { style: { display: 'flex', flexWrap: 'wrap' } },
+              galleryImages.toJS().map(function (item, i) {
+                var src = typeof item === 'string' ? item : (item && (item.image || item.url));
+                return h(PreviewImage, { key: i, src: src, getAsset: getAsset });
+              })
+            )
+          )
+        );
+      }
+
+      // The collection/file name must match config.yml exactly ("site_config", inside collection "settings")
+      CMS.registerPreviewTemplate('site_config', SiteConfigPreview);
+    </script>
   </body>
 </html>
