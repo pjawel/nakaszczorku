@@ -1,13 +1,22 @@
+# GitHub repository configuration
 backend:
   name: github
-  repo: pjawel/nakaszczorku # Configured based on your package.json homepage
-  branch: main # Adjust to 'master' if that is your main branch
+  repo: pjawel/nakaszczorku # Your GitHub username/repo
+  branch: main # Change to 'master' if your repo default branch is master
+  
+  # OAuth Authentication Gateway URL (Required for GitHub Pages)
+  # Replace with your deployed OAuth proxy URL (e.g. Snet, Vercel Decap OAuth, or Cloudflare Worker)
+  # base_url: https://your-oauth-proxy.vercel.app
 
+# Enable local proxy server during local development (npx decap-server)
+local_backend: true
+
+# Media upload paths
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  # Example collection for Website Information / Pages
+  # Collection for general site metadata
   - name: "pages"
     label: "Strony"
     files:
@@ -18,7 +27,7 @@ collections:
           - { label: "Nazwa", name: "name", widget: "string" }
           - { label: "Opis", name: "description", widget: "text" }
 
-  # Example collection for Menu Items (Pierogi)
+  # Collection for Menu / Pierogi
   - name: "menu"
     label: "Menu (Pierogi)"
     folder: "src/content/menu"
