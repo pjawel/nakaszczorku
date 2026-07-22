@@ -3,58 +3,34 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel Administracyjny - Pierogarnia</title>
-    <!-- Skrypt Netlify Identity (jeśli używasz) -->
+    <title>Panel Administracyjny</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <!-- Styl podglądu (Tailwind / Twój CSS), aby podgląd wyglądał tak jak strona główne -->
-    <link rel="stylesheet" href="/src/index.css" />
   </head>
   <body>
-    <!-- 1. Główny skrypt Decap CMS -->
+    <!-- 1. Wczytanie Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-    <!-- 2. Rejestracja podglądu dla Twojej kolekcji -->
+    <!-- 2. Skrypt podglądu -->
     <script>
-      // Pobieramy obiekt React i HTML z Decap CMS
-      const h = window.h;
+      // Komponent podglądu w czystym JavaScript (bez JSX/Babela)
+      var ConfigPreview = createClass({
+        render: function() {
+          var entry = this.props.entry;
+          var title = entry.getIn(['data', 'info', 'title']) || 'Pierogarnia';
+          var phone = entry.getIn(['data', 'info', 'phone']) || 'brak telefonu';
+          var heroTitle = entry.getIn(['data', 'hero', 'title_line1']) || '';
 
-      // Tworzymy szablon podglądu dla ustawień/konfiguracji
-      const ConfigPreview = createClass({
-        render: function () {
-          // Pobieramy wprowadzane dane z formularza w czasie rzeczywistym
-          const entry = this.props.entry;
-          const title = entry.getIn(['data', 'info', 'title']);
-          const phone = entry.getIn(['data', 'info', 'phone']);
-          const heroSubtitle = entry.getIn(['data', 'hero', 'subtitle']);
-          const heroTitle1 = entry.getIn(['data', 'hero', 'title_line1']);
-          const heroBg = this.props.getAsset(entry.getIn(['data', 'hero', 'bg_image']));
-
-          return h('div', { className: 'p-6 bg-amber-50 text-stone-800 font-sans' },
-            h('div', { className: 'max-w-2xl mx-auto space-y-6' },
-              // Nagłówek informacyjny
-              h('div', { className: 'border-b pb-4 border-amber-200' },
-                h('h1', { className: 'text-2xl font-bold text-amber-900' }, title || 'Nazwa restauracji'),
-                h('p', { className: 'text-sm text-stone-600' }, 'Telefon: ' + (phone || '—'))
-              ),
-              // Sekcja Hero Preview
-              h('div', { 
-                className: 'relative p-8 rounded-lg text-white bg-cover bg-center overflow-hidden shadow-lg',
-                style: { backgroundImage: heroBg ? `url(${heroBg.toString()})` : 'none', backgroundColor: '#4a3728' }
-              },
-                h('span', { className: 'text-xs uppercase tracking-widest text-amber-300 font-bold' }, heroSubtitle),
-                h('h2', { className: 'text-3xl font-serif mt-2 font-bold' }, heroTitle1)
-              ),
-              // Informacja pomocnicza
-              h('p', { className: 'text-xs text-stone-400 italic text-center' }, 
-                'To jest uproszczony podgląd danych w czasie rzeczywistym.'
-              )
-            )
+          return h('div', { style: { padding: '20px', fontFamily: 'sans-serif', background: '#fdfcf0' } },
+            h('h1', { style: { color: '#8b5e3c', fontSize: '24px' } }, title),
+            h('p', null, 'Tel: ' + phone),
+            h('hr', { style: { margin: '15px 0' } }),
+            h('h2', { style: { fontSize: '18px' } }, 'Hero: ' + heroTitle)
           );
         }
       });
 
-      // Zarejestruj szablon podglądu dla pliku "site_config" z kolekcji "settings"
-      CMS.registerPreviewTemplate('settings', ConfigPreview);
+      // Zarejestruj dla pliku 'site_config'
+      CMS.registerPreviewTemplate('site_config', ConfigPreview);
     </script>
   </body>
 </html>
