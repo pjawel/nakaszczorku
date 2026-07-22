@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 
 // --- Constants ---
-const DEFAULT_MENU_IMAGES = [
+const MENU_IMAGES = [
   '/uploads/menu1.jpg',
   '/uploads/menu2.jpg',
   '/uploads/menu3.jpg',
@@ -190,23 +190,6 @@ const ORDER_MENU = [
 
 const webhookUrl = 'https://hook.eu1.make.com/5kir8yq9nvnzln131kr83bmarlcwe492';
 
-// --- Helpers ---
-const normalizeImages = (imagesData: any): string[] => {
-  if (!Array.isArray(imagesData)) return [];
-
-  return imagesData
-    .map((item) => {
-      if (typeof item === 'object' && item !== null) {
-        return item.image || item.url || '';
-      }
-      if (typeof item === 'string') {
-        return item;
-      }
-      return '';
-    })
-    .filter(Boolean);
-};
-
 // --- Components ---
 
 const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
@@ -285,21 +268,16 @@ const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
   );
 };
 
-const PaperMenu = ({ images = DEFAULT_MENU_IMAGES }: { images?: string[] }) => {
+const PaperMenu = () => {
   const [spreadIndex, setSpreadIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [direction, setDirection] = useState<'next' | 'prev' | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Reset do pierwszej strony, jeśli z CMS przysłano inną liczbę stron
-  useEffect(() => {
-    setSpreadIndex(0);
-  }, [images.length]);
-
-  const spreads: (string | null)[][] = [];
-  for (let i = 0; i < images.length; i += 2) {
-    spreads.push([images[i], images[i + 1] || null]);
+  const spreads = [];
+  for (let i = 0; i < MENU_IMAGES.length; i += 2) {
+    spreads.push([MENU_IMAGES[i], MENU_IMAGES[i + 1] || null]);
   }
 
   const next = () => {
@@ -330,14 +308,6 @@ const PaperMenu = ({ images = DEFAULT_MENU_IMAGES }: { images?: string[] }) => {
     setZoomImage(img);
     setIsZoomed(true);
   };
-
-  if (spreads.length === 0) {
-    return (
-      <section id="menu" className="py-32 bg-rustic-beige relative text-center text-rustic-brown font-serif">
-        <p>Brak dostępnych stron menu.</p>
-      </section>
-    );
-  }
 
   return (
     <section id="menu" className="py-32 bg-rustic-beige relative overflow-hidden">
@@ -372,7 +342,7 @@ const PaperMenu = ({ images = DEFAULT_MENU_IMAGES }: { images?: string[] }) => {
                <div className="w-1/2 h-full border-r border-black/5 bg-gradient-to-r from-[#fdfbf6] to-white p-2 md:p-8 relative">
                   {(direction === 'prev' ? spreads[spreadIndex - 1]?.[0] : spreads[spreadIndex]?.[0]) && (
                     <img 
-                      src={direction === 'prev' ? spreads[spreadIndex - 1][0]! : spreads[spreadIndex][0]!} 
+                      src={direction === 'prev' ? spreads[spreadIndex - 1][0] : spreads[spreadIndex][0]} 
                       className="w-full h-full object-contain" 
                       alt="bg-left"
                     />
@@ -1141,22 +1111,8 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-// --- Main App Component ---
-
-interface AppProps {
-  cmsData?: {
-    menu_images?: any;
-    [key: string]: any;
-  };
-}
-
-export default function App({ cmsData }: AppProps) {
+export default function App() {
   const [view, setView] = useState<'home' | 'order'>('home');
-
-  // Pobieranie i normalizacja obrazów z CMS lub domyślnej stałej
-  const activeMenuImages = cmsData?.menu_images 
-    ? normalizeImages(cmsData.menu_images)
-    : DEFAULT_MENU_IMAGES;
 
   if (view === 'order') {
     return <OrderSystem onBack={() => setView('home')} />;
@@ -1200,8 +1156,7 @@ export default function App({ cmsData }: AppProps) {
           </div>
         </section>
 
-        {/* Książka 3D z obrazami przekazanymi ze źródła CMS / stałej */}
-        <PaperMenu images={activeMenuImages} />
+        <PaperMenu />
         
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -1231,3 +1186,4 @@ export default function App({ cmsData }: AppProps) {
     </div>
   );
 }
+
