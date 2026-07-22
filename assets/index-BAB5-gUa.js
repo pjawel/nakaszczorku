@@ -186,7 +186,7 @@ Error generating stack: `+a.message+`
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */const sz=[["path",{d:"M18 6 6 18",key:"1bl5f8"}],["path",{d:"m6 6 12 12",key:"d8bk6v"}]],ad=Mt("x",sz),rz=`navbar:
-  brand_name: Pierogarnia w Kaszczorku
+  brand_name: Pierogarnia na Kaszczorku
   link_menu: Menu
   link_gallery: Galeria
   link_contact: Kontakt
