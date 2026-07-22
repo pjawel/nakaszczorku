@@ -3,34 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel Administracyjny</title>
+    <title>Content Management System</title>
+    <!-- Netlify Identity Widget for Authentication -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
-    <!-- 1. Wczytanie Decap CMS -->
+    <!-- Decap CMS Core Script -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-    <!-- 2. Skrypt podglądu -->
-    <script>
-      // Komponent podglądu w czystym JavaScript (bez JSX/Babela)
-      var ConfigPreview = createClass({
-        render: function() {
-          var entry = this.props.entry;
-          var title = entry.getIn(['data', 'info', 'title']) || 'Pierogarnia';
-          var phone = entry.getIn(['data', 'info', 'phone']) || 'brak telefonu';
-          var heroTitle = entry.getIn(['data', 'hero', 'title_line1']) || '';
-
-          return h('div', { style: { padding: '20px', fontFamily: 'sans-serif', background: '#fdfcf0' } },
-            h('h1', { style: { color: '#8b5e3c', fontSize: '24px' } }, title),
-            h('p', null, 'Tel: ' + phone),
-            h('hr', { style: { margin: '15px 0' } }),
-            h('h2', { style: { fontSize: '18px' } }, 'Hero: ' + heroTitle)
-          );
-        }
-      });
-
-      // Zarejestruj dla pliku 'site_config'
-      CMS.registerPreviewTemplate('site_config', ConfigPreview);
-    </script>
   </body>
 </html>
