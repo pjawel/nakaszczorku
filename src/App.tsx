@@ -5,17 +5,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  Facebook, 
-  ChevronRight, 
-  ChevronLeft, 
-  Star, 
-  UtensilsCrossed, 
-  Camera, 
+import yaml from 'js-yaml';
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Facebook,
+  ChevronRight,
+  ChevronLeft,
+  Star,
+  UtensilsCrossed,
+  Camera,
   MessageSquare,
   ArrowRight,
   Menu as MenuIcon,
@@ -26,6 +27,132 @@ import {
   Trash2,
   CheckCircle2
 } from 'lucide-react';
+
+// IMPORTANT: this ?raw import pulls in the raw text of the YAML file that
+// DecapCMS writes to (src/data/config.yml). Vite supports ?raw imports for
+// any text file out of the box, no extra plugin needed. We parse it with
+// js-yaml at runtime. Whenever a DecapCMS edit is committed, this file's
+// content changes, the build picks it up, and the site rebuilds with the
+// new text.
+import siteConfigRaw from './data/config.yml?raw';
+
+// --- Types ---
+interface MenuItem {
+  id: string;
+  name: string;
+  price: number;
+}
+
+interface MenuCategory {
+  category: string;
+  description?: string;
+  items: MenuItem[];
+}
+
+interface SiteConfig {
+  navbar: {
+    brand_name: string;
+    link_menu: string;
+    link_gallery: string;
+    link_contact: string;
+    order_button: string;
+    phone_display: string;
+  };
+  hero: {
+    eyebrow: string;
+    title_line1: string;
+    title_line2: string;
+    cta_menu_label: string;
+    cta_order_label: string;
+    scroll_label: string;
+  };
+  menu_section: {
+    eyebrow: string;
+    title: string;
+    empty_message: string;
+  };
+  story: {
+    eyebrow: string;
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+  };
+  cta_section: {
+    title: string;
+    description: string;
+    button_label: string;
+  };
+  gallery_section: {
+    eyebrow: string;
+    title: string;
+    description: string;
+  };
+  reviews: {
+    eyebrow: string;
+    title: string;
+    quote: string;
+    facebook_button_label: string;
+  };
+  contact: {
+    eyebrow: string;
+    title: string;
+    location_label: string;
+    address_street: string;
+    address_city: string;
+    contact_label: string;
+    phone: string;
+    hours_label: string;
+    hours_days: string;
+    hours_time: string;
+    facebook_follow_label: string;
+  };
+  footer: {
+    brand_name: string;
+    tagline: string;
+    nav_title: string;
+    nav_menu_label: string;
+    nav_gallery_label: string;
+    nav_contact_label: string;
+    contact_title: string;
+    phone: string;
+    address: string;
+    hours: string;
+    copyright_text: string;
+  };
+  order_menu: MenuCategory[];
+  order_form: {
+    page_title: string;
+    delivery_title: string;
+    name_label: string;
+    name_placeholder: string;
+    phone_label: string;
+    phone_placeholder: string;
+    phone_error: string;
+    street_label: string;
+    street_placeholder: string;
+    building_label: string;
+    building_placeholder: string;
+    apartment_label: string;
+    apartment_placeholder: string;
+    city_label: string;
+    city_placeholder: string;
+    notes_label: string;
+    notes_placeholder: string;
+    payment_title: string;
+    payment_description: string;
+    cart_title: string;
+    cart_empty_message: string;
+    thank_you_title: string;
+    thank_you_description: string;
+    order_details_title: string;
+    back_home_button: string;
+  };
+}
+
+// Parse the YAML content committed by DecapCMS into a JS object once at
+// module load. If anything is missing from the file, we fall back to a
+// sensible empty default so the site doesn't crash.
+const config = (yaml.load(siteConfigRaw) as SiteConfig) || ({} as SiteConfig);
 
 // --- Constants ---
 const MENU_IMAGES = [
@@ -60,133 +187,10 @@ const GALLERY_IMAGES = [
   '/uploads/g17.jpg'
 ];
 
-const ORDER_MENU = [
-  {
-    category: "Zupy",
-    items: [
-      { id: "szurpa", name: "Szurpa", price: 22 },
-      { id: "charczo", name: "Charczo", price: 19 },
-      { id: "barszcz-ukr", name: "Barszcz ukraiński", price: 18 },
-      { id: "barszcz-piel", name: "Barszcz z pielmieni", price: 17 },
-      { id: "rosol-piel", name: "Rosół z pielmieni", price: 16 },
-      { id: "rosol-mak", name: "Rosół z makaronem", price: 10 },
-      { id: "barszcz-picie", name: "Barszcz do picia", price: 9 }
-    ]
-  },
-  {
-    category: "Dania główne",
-    items: [
-      { id: "poledwiczka", name: "Soczysta polędwiczka z warzywami w zestawie z opieczonymi ziemniaczkami i surówką", price: 42 },
-      { id: "kurczak-grill", name: "Grillowany filet kurczaka z frytkami i surówką", price: 38 },
-      { id: "schabowe", name: "Schabowe z ziemniakami i surówką", price: 33 }
-    ]
-  },
-  {
-    category: "Ryby z patelni",
-    description: "w zestawie z ziemniakami albo frytkami i surówką",
-    items: [
-      { id: "pstrog", name: "Pstrąg łososiowy", price: 34 },
-      { id: "dorsz", name: "Dorsz filet w panierce", price: 34 },
-      { id: "halibut", name: "Halibut", price: 42 },
-      { id: "losos", name: "Łosoś filet", price: 42 }
-    ]
-  },
-  {
-    category: "Placki ziemniaczane",
-    items: [
-      { id: "placki-gulasz", name: "Placki ziemniaczane z gulaszem", price: 27 },
-      { id: "placki-smietana", name: "Placki ziemniaczane ze śmietaną", price: 23 }
-    ]
-  },
-  {
-    category: "Krokiety z sosem",
-    items: [
-      { id: "krokiet-kurczak", name: "Krokiety z kurczakiem i mozzarellą (2szt)", price: 25 },
-      { id: "krokiet-pieczarki", name: "Krokiety z pieczarkami i mozzarellą (2szt)", price: 25 },
-      { id: "krokiet-szpinak", name: "Krokiety ze szpinakiem i fetą (2szt)", price: 25 },
-      { id: "krokiet-kapusta", name: "Krokiety z kapustą i grzybami (2szt)", price: 25 },
-      { id: "nalesniki-twarog", name: "Naleśniki z twarogiem (2szt)", price: 25 }
-    ]
-  },
-  {
-    category: "Czeburek z sosem",
-    items: [
-      { id: "czeburek-miesto", name: "Czeburek z mięsem (wieprzowina)", price: 16 },
-      { id: "czeburek-kurczak-ser", name: "Czeburek z kurczakiem i serem", price: 16 },
-      { id: "czeburek-kurczak-grzyby", name: "Czeburek z kurczakiem i grzybami", price: 16 },
-      { id: "czeburek-wedzony", name: "Czeburek z wędzonym serem i suszonymi pomidorami", price: 16 }
-    ]
-  },
-  {
-    category: "Pierogi",
-    items: [
-      { id: "pierogi-miks", name: "Miks (5 dowolnych pierogow)", price: 29 },
-      { id: "pierogi-miesto", name: "Pierogi z mięsem", price: 28 },
-      { id: "pierogi-kurczak-ser", name: "Pierogi z kurczakiem i serem", price: 24 },
-      { id: "pierogi-kurczak-meksyk", name: "Pierogi z kurczakiem po meksykańsku", price: 24 },
-      { id: "pierogi-ruskie", name: "Pierogi ruskie", price: 24 },
-      { id: "pierogi-ruskie-boczek", name: "Rusek z boczkiem", price: 24 },
-      { id: "pierogi-kapusta-grzyby", name: "Pierogi z kapustą i grzybami", price: 24 },
-      { id: "pierogi-pieczarki", name: "Pierogi z pieczarkami", price: 24 },
-      { id: "pierogi-pieczarki-ser", name: "Pierogi z pieczarkami i serem", price: 24 },
-      { id: "pierogi-szpinak-feta", name: "Pierogi ze szpinakiem i fetą", price: 24 },
-      { id: "pierogi-soczewica", name: "Pierogi z soczewicą (wege)", price: 25 },
-      { id: "pierogi-twarog", name: "Pierogi z twarogiem", price: 23 },
-      { id: "pierogi-twarog-owoce", name: "Pierogi z twarogiem i owocami", price: 25 },
-      { id: "pierogi-owoce", name: "Pierogi z owocami", price: 25 }
-    ]
-  },
-  {
-    category: "Pielmieni",
-    items: [
-      { id: "pielmieni-miks", name: "Miks pielmieni (15szt)", price: 32 },
-      { id: "pielmieni-wol-wieprz", name: "Pielmieni z wołowiną i wieprzowiną", price: 28 },
-      { id: "pielmieni-indyk-wol", name: "Pielmieni z indykiem i wołowiną", price: 28 },
-      { id: "pielmieni-soczewica-borowik", name: "Pielmieni z soczewicą i borowikiem", price: 27 },
-      { id: "pielmieni-borowik-pieczarka", name: "Pielmieni z borowikiem i pieczarką", price: 30 }
-    ]
-  },
-  {
-    category: "Chinkali",
-    items: [
-      { id: "chinkali-wol-wieprz", name: "Chinkali z wołowiną i wieprzowiną", price: 35 }
-    ]
-  },
-  {
-    category: "Dla dzieci",
-    items: [
-      { id: "dziecko-schabowy", name: "Schabowe z kurczaka z ziemniakami i surówką", price: 33 },
-      { id: "dziecko-schabowy-frytki", name: "Schabowe z kurczaka z frytkami i surówką", price: 33 },
-      { id: "dziecko-naggetsy", name: "Frytki i nuggetsy", price: 25 },
-      { id: "dziecko-stripsy", name: "Stripsy z kurczaka i frytki", price: 30 },
-      { id: "dziecko-leniwe", name: "Pierogi leniwe (15szt)", price: 22 },
-      { id: "dziecko-twarog", name: "Pierogi z twarogiem", price: 23 },
-      { id: "dziecko-nalesniki-twarog", name: "Naleśniki z twarogiem (2szt)", price: 23 },
-      { id: "dziecko-nalesniki-nutella", name: "Naleśniki z nutellą albo dżemem (3szt)", price: 23 }
-    ]
-  },
-  {
-    category: "Napoje",
-    items: [
-      { id: "cola", name: "Cola", price: 8 },
-      { id: "fanta", name: "Fanta", price: 8 },
-      { id: "sprite", name: "Sprite", price: 8 },
-      { id: "sok-j", name: "Sok jabłkowy", price: 6 },
-      { id: "sok-p", name: "Sok pomarańczowy", price: 6 },
-      { id: "sok-m", name: "Sok multiwitamina", price: 6 },
-      { id: "woda-gaz", name: "Woda gazowana", price: 5 },
-      { id: "woda-ngaz", name: "Woda niegazowana", price: 5 }
-    ]
-  },
-  {
-    category: "Dodatki",
-    items: [
-      { id: "surowka", name: "surówka", price: 8 },
-      { id: "ziemniaki", name: "ziemniaki", price: 8 },
-      { id: "frytki", price: 10 }
-    ]
-  }
-];
+// The order menu now comes from CMS content. If it's ever empty (e.g. the
+// content file hasn't been created yet), fall back to an empty array so the
+// order page doesn't crash — Decap is the source of truth now.
+const ORDER_MENU: MenuCategory[] = config.order_menu || [];
 
 const webhookUrl = 'https://hook.eu1.make.com/5kir8yq9nvnzln131kr83bmarlcwe492';
 
@@ -195,6 +199,7 @@ const webhookUrl = 'https://hook.eu1.make.com/5kir8yq9nvnzln131kr83bmarlcwe492';
 const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const nav = config.navbar;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -207,29 +212,29 @@ const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-rustic-cream/95 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img 
-              src="https://iili.io/BZtFIX2.png" 
-              alt="Logo" 
+            <img
+              src="https://iili.io/BZtFIX2.png"
+              alt="Logo"
               className={`rounded-full border-2 border-rustic-brown transition-all duration-500 ${scrolled ? 'w-10 h-10' : 'w-14 h-14'}`}
             />
             <span className={`font-serif font-bold tracking-tight text-rustic-dark transition-all duration-500 ${scrolled ? 'text-lg' : 'text-2xl'}`}>
-              Pierogarnia <span className="hidden sm:inline">na Kaszczorku</span>
+              {nav?.brand_name || 'Pierogarnia na Kaszczorku'}
             </span>
           </div>
 
           <div className="hidden md:flex items-center gap-10 text-sm font-medium uppercase tracking-[0.2em] text-rustic-brown pt-1">
-            <a href="#menu" className="hover:text-rustic-accent transition-colors">Menu</a>
-            <a href="#gallery" className="hover:text-rustic-accent transition-colors">Galeria</a>
-            <a href="#contact" className="hover:text-rustic-accent transition-colors">Kontakt</a>
-            <button 
+            <a href="#menu" className="hover:text-rustic-accent transition-colors">{nav?.link_menu || 'Menu'}</a>
+            <a href="#gallery" className="hover:text-rustic-accent transition-colors">{nav?.link_gallery || 'Galeria'}</a>
+            <a href="#contact" className="hover:text-rustic-accent transition-colors">{nav?.link_contact || 'Kontakt'}</a>
+            <button
               onClick={onOrderClick}
               className="bg-rustic-accent text-white px-8 py-3 rounded-full hover:bg-rustic-dark transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <ShoppingCart size={18} />
-              Zamów Online
+              {nav?.order_button || 'Zamów Online'}
             </button>
-            <a href="tel:789779658" className="bg-rustic-brown text-white px-8 py-3 rounded-full hover:bg-rustic-dark transition-all shadow-md hover:shadow-lg">
-              789 779 658
+            <a href={`tel:${(nav?.phone_display || '789779658').replace(/\s/g, '')}`} className="bg-rustic-brown text-white px-8 py-3 rounded-full hover:bg-rustic-dark transition-all shadow-md hover:shadow-lg">
+              {nav?.phone_display || '789 779 658'}
             </a>
           </div>
 
@@ -241,7 +246,7 @@ const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
 
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -250,17 +255,17 @@ const Navbar = ({ onOrderClick }: { onOrderClick: () => void }) => {
             <button className="absolute top-8 right-8" onClick={() => setMobileMenuOpen(false)}>
               <X size={32} />
             </button>
-            <a href="#menu" onClick={() => setMobileMenuOpen(false)}>Menu</a>
-            <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>Galeria</a>
-            <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Kontakt</a>
-            <button 
+            <a href="#menu" onClick={() => setMobileMenuOpen(false)}>{nav?.link_menu || 'Menu'}</a>
+            <a href="#gallery" onClick={() => setMobileMenuOpen(false)}>{nav?.link_gallery || 'Galeria'}</a>
+            <a href="#contact" onClick={() => setMobileMenuOpen(false)}>{nav?.link_contact || 'Kontakt'}</a>
+            <button
               onClick={() => { onOrderClick(); setMobileMenuOpen(false); }}
               className="px-10 py-4 bg-rustic-accent text-white rounded-full flex items-center gap-2"
             >
               <ShoppingCart size={24} />
-              Zamów Online
+              {nav?.order_button || 'Zamów Online'}
             </button>
-            <a href="tel:789779658" className="mt-4 px-10 py-4 border-2 border-white rounded-full">789 779 658</a>
+            <a href={`tel:${(nav?.phone_display || '789779658').replace(/\s/g, '')}`} className="mt-4 px-10 py-4 border-2 border-white rounded-full">{nav?.phone_display || '789 779 658'}</a>
           </motion.div>
         )}
       </AnimatePresence>
@@ -274,6 +279,7 @@ const PaperMenu = () => {
   const [zoomImage, setZoomImage] = useState<string | null>(null);
   const [direction, setDirection] = useState<'next' | 'prev' | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const section = config.menu_section;
 
   const spreads = [];
   for (let i = 0; i < MENU_IMAGES.length; i += 2) {
@@ -318,16 +324,16 @@ const PaperMenu = () => {
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <p className="font-cormorant italic text-rustic-brown text-xl mb-4 tracking-wide">Smaki tradycji</p>
-          <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark mb-6">Nasza Karta</h2>
+          <p className="font-cormorant italic text-rustic-brown text-xl mb-4 tracking-wide">{section?.eyebrow || 'Smaki tradycji'}</p>
+          <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark mb-6">{section?.title || 'Nasza Karta'}</h2>
           <div className="w-24 h-1 bg-rustic-brown mx-auto" />
         </div>
-        
-        <div 
+
+        <div
           className="relative group max-w-5xl mx-auto perspective-2000 px-4 md:px-0"
           onContextMenu={(e) => e.preventDefault()}
         >
-          <motion.div 
+          <motion.div
             onPanEnd={(_, info) => {
               if (Math.abs(info.offset.x) > 50) {
                 if (info.offset.x < 0) next();
@@ -336,14 +342,14 @@ const PaperMenu = () => {
             }}
             className="relative aspect-[1.1/1] md:aspect-[1.4/1] bg-white rounded-sm shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] flex preserve-3d"
           >
-            
+
             {/* Background Pages */}
             <div className="w-full h-full flex absolute inset-0 z-0">
                <div className="w-1/2 h-full border-r border-black/5 bg-gradient-to-r from-[#fdfbf6] to-white p-2 md:p-8 relative">
                   {(direction === 'prev' ? spreads[spreadIndex - 1]?.[0] : spreads[spreadIndex]?.[0]) && (
-                    <img 
-                      src={direction === 'prev' ? spreads[spreadIndex - 1][0] : spreads[spreadIndex][0]} 
-                      className="w-full h-full object-contain" 
+                    <img
+                      src={direction === 'prev' ? spreads[spreadIndex - 1][0] : spreads[spreadIndex][0]}
+                      className="w-full h-full object-contain"
                       alt="bg-left"
                     />
                   )}
@@ -351,9 +357,9 @@ const PaperMenu = () => {
                </div>
                <div className="w-1/2 h-full bg-gradient-to-l from-[#fdfbf6] to-white p-2 md:p-8 relative">
                   {(direction === 'next' ? spreads[spreadIndex + 1]?.[1] : spreads[spreadIndex]?.[1]) && (
-                    <img 
-                      src={direction === 'next' ? (spreads[spreadIndex + 1]?.[1] || '') : (spreads[spreadIndex][1] || '')} 
-                      className="w-full h-full object-contain" 
+                    <img
+                      src={direction === 'next' ? (spreads[spreadIndex + 1]?.[1] || '') : (spreads[spreadIndex][1] || '')}
+                      className="w-full h-full object-contain"
                       alt="bg-right"
                     />
                   )}
@@ -406,8 +412,8 @@ const PaperMenu = () => {
 
             {!isAnimating && (
               <div className="absolute inset-0 z-[120] flex">
-                <div 
-                  className="w-1/2 h-full cursor-zoom-in group/page relative" 
+                <div
+                  className="w-1/2 h-full cursor-zoom-in group/page relative"
                   onClick={() => spreads[spreadIndex][0] && handleZoom(spreads[spreadIndex][0]!)}
                 >
                   <div className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 md:opacity-0 group-hover/page:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); prev(); }}>
@@ -416,8 +422,8 @@ const PaperMenu = () => {
                     </div>
                   </div>
                 </div>
-                <div 
-                  className="w-1/2 h-full cursor-zoom-in group/page relative" 
+                <div
+                  className="w-1/2 h-full cursor-zoom-in group/page relative"
                   onClick={() => spreads[spreadIndex][1] && handleZoom(spreads[spreadIndex][1]!)}
                 >
                   <div className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 md:opacity-0 group-hover/page:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); next(); }}>
@@ -432,7 +438,7 @@ const PaperMenu = () => {
 
           <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 flex gap-4 bg-white/60 backdrop-blur-md px-8 py-4 rounded-full border border-rustic-brown/10 z-[130] shadow-sm">
             {spreads.map((_, i) => (
-              <button 
+              <button
                 key={i}
                 disabled={isAnimating}
                 onClick={() => { if(i !== spreadIndex) { setDirection(i > spreadIndex ? 'next' : 'prev'); setSpreadIndex(i); } }}
@@ -469,6 +475,7 @@ const PaperMenu = () => {
 
 const Gallery = () => {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const section = config.gallery_section;
 
   return (
     <section id="gallery" className="py-32 bg-rustic-cream relative">
@@ -480,17 +487,17 @@ const Gallery = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
           <div>
-            <p className="font-cormorant italic text-rustic-brown text-xl mb-4">Uchwycone chwile</p>
-            <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark">Galeria</h2>
+            <p className="font-cormorant italic text-rustic-brown text-xl mb-4">{section?.eyebrow || 'Uchwycone chwile'}</p>
+            <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark">{section?.title || 'Galeria'}</h2>
           </div>
           <p className="text-rustic-brown max-w-md text-lg leading-relaxed italic font-serif">
-            Zajrzyj do naszej kuchni i poczuj atmosferę miejsca, w którym tradycja łączy się z pasją do domowego gotowania.
+            {section?.description || 'Zajrzyj do naszej kuchni i poczuj atmosferę miejsca, w którym tradycja łączy się z pasją do domowego gotowania.'}
           </p>
         </div>
 
         <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
           {GALLERY_IMAGES.map((img, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -501,9 +508,9 @@ const Gallery = () => {
               className="relative break-inside-avoid group cursor-zoom-in overflow-hidden rounded-sm shadow-md bg-white p-1.5 md:p-2"
             >
               <div className="overflow-hidden">
-                <img 
-                  src={img} 
-                  alt={`Kaszczorek Galeria ${i}`} 
+                <img
+                  src={img}
+                  alt={`Kaszczorek Galeria ${i}`}
                   className="w-full h-auto block transition-transform duration-700 group-hover:scale-110"
                   loading="lazy"
                 />
@@ -536,224 +543,236 @@ const Gallery = () => {
   );
 };
 
-const Reviews = () => (
-  <section className="py-32 bg-rustic-dark text-rustic-beige overflow-hidden relative">
-    <div className="max-w-4xl mx-auto px-6 text-center">
-      <p className="font-cormorant italic text-rustic-accent text-xl mb-4 tracking-widest uppercase">Zadowoleni Goście</p>
-      <h2 className="text-4xl md:text-5xl font-serif font-bold mb-16">Co o nas mówią</h2>
-      
-      <div className="relative p-12 md:p-20 bg-rustic-brown/20 rounded-3xl border border-rustic-beige/10 backdrop-blur-sm">
-        <div className="flex justify-center gap-1 mb-8 text-yellow-500">
-          {[1,2,3,4,5].map(i => <Star key={i} fill="currentColor" size={20} />)}
-        </div>
-        <p className="text-2xl md:text-3xl font-serif italic mb-12 leading-relaxed">
-          "Najlepsze pierogi jakie jadłem w Toruniu! Czuć, że są robione z sercem i tradycją. 
-          Kaszczorek ma swój kulinarny skarb, do którego wracamy całą rodziną."
-        </p>
-        <div className="flex flex-col items-center gap-6">
-          <div className="w-16 h-1 bg-rustic-accent" />
-          <a 
-            href="https://www.facebook.com/pierogarnianakaszczorku/reviews/?id=100057447759306&sk=reviews" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full transition-all text-sm tracking-widest uppercase"
-          >
-            <Facebook size={18} className="text-blue-400" />
-            Opinie na Facebooku
-            <ArrowRight size={16} />
-          </a>
+const Reviews = () => {
+  const section = config.reviews;
+  return (
+    <section className="py-32 bg-rustic-dark text-rustic-beige overflow-hidden relative">
+      <div className="max-w-4xl mx-auto px-6 text-center">
+        <p className="font-cormorant italic text-rustic-accent text-xl mb-4 tracking-widest uppercase">{section?.eyebrow || 'Zadowoleni Goście'}</p>
+        <h2 className="text-4xl md:text-5xl font-serif font-bold mb-16">{section?.title || 'Co o nas mówią'}</h2>
+
+        <div className="relative p-12 md:p-20 bg-rustic-brown/20 rounded-3xl border border-rustic-beige/10 backdrop-blur-sm">
+          <div className="flex justify-center gap-1 mb-8 text-yellow-500">
+            {[1,2,3,4,5].map(i => <Star key={i} fill="currentColor" size={20} />)}
+          </div>
+          <p className="text-2xl md:text-3xl font-serif italic mb-12 leading-relaxed">
+            "{section?.quote || 'Najlepsze pierogi jakie jadłem w Toruniu! Czuć, że są robione z sercem i tradycją. Kaszczorek ma swój kulinarny skarb, do którego wracamy całą rodziną.'}"
+          </p>
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-16 h-1 bg-rustic-accent" />
+            <a
+              href="https://www.facebook.com/pierogarnianakaszczorku/reviews/?id=100057447759306&sk=reviews"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-full transition-all text-sm tracking-widest uppercase"
+            >
+              <Facebook size={18} className="text-blue-400" />
+              {section?.facebook_button_label || 'Opinie na Facebooku'}
+              <ArrowRight size={16} />
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
-const Contact = () => (
-  <section id="contact" className="py-32 bg-rustic-beige relative overflow-hidden">
-    <div className="absolute inset-0 bg-dot-pattern opacity-[0.03] pointer-events-none" />
-    <div className="max-w-7xl mx-auto px-6 relative z-10">
-      <div className="grid lg:grid-cols-2 gap-20 items-stretch">
-        <div className="flex flex-col justify-center">
-          <p className="font-cormorant italic text-rustic-brown text-xl mb-4 tracking-wide">Zapraszamy do stołu</p>
-          <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark mb-12">Odwiedź nas</h2>
-          
-          <div className="grid sm:grid-cols-2 gap-10">
-            <div className="space-y-10">
-              <div className="group">
-                <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">Lokalizacja</p>
-                <div className="flex items-start gap-4">
-                  <MapPin size={20} className="text-rustic-brown mt-1 shrink-0" />
-                  <p className="text-xl text-rustic-dark font-serif font-medium">
-                    Dożynkowa 9c,<br />
-                    87-100 Toruń
-                  </p>
-                </div>
-              </div>
-              
-              <div className="group">
-                <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">Kontakt</p>
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-4">
-                    <Phone size={20} className="text-rustic-brown shrink-0" />
-                    <a href="tel:789779658" className="text-xl text-rustic-dark font-serif font-medium hover:text-rustic-accent">789 779 658</a>
+const Contact = () => {
+  const c = config.contact;
+  return (
+    <section id="contact" className="py-32 bg-rustic-beige relative overflow-hidden">
+      <div className="absolute inset-0 bg-dot-pattern opacity-[0.03] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20 items-stretch">
+          <div className="flex flex-col justify-center">
+            <p className="font-cormorant italic text-rustic-brown text-xl mb-4 tracking-wide">{c?.eyebrow || 'Zapraszamy do stołu'}</p>
+            <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark mb-12">{c?.title || 'Odwiedź nas'}</h2>
+
+            <div className="grid sm:grid-cols-2 gap-10">
+              <div className="space-y-10">
+                <div className="group">
+                  <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">{c?.location_label || 'Lokalizacja'}</p>
+                  <div className="flex items-start gap-4">
+                    <MapPin size={20} className="text-rustic-brown mt-1 shrink-0" />
+                    <p className="text-xl text-rustic-dark font-serif font-medium">
+                      {c?.address_street || 'Dożynkowa 9c,'}<br />
+                      {c?.address_city || '87-100 Toruń'}
+                    </p>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="space-y-10">
-              <div className="group">
-                <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">Godziny Gościnności</p>
-                <div className="flex items-start gap-4">
-                  <Clock size={20} className="text-rustic-brown mt-1 shrink-0" />
-                  <div className="text-lg text-rustic-dark font-serif">
-                    <p className="flex justify-between gap-4 mb-1"><span>Pon - Nd:</span> <span className="font-bold">11:00 - 19:00</span></p>
+                <div className="group">
+                  <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">{c?.contact_label || 'Kontakt'}</p>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <Phone size={20} className="text-rustic-brown shrink-0" />
+                      <a href={`tel:${(c?.phone || '789779658').replace(/\s/g, '')}`} className="text-xl text-rustic-dark font-serif font-medium hover:text-rustic-accent">{c?.phone || '789 779 658'}</a>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4">
-                <motion.a 
-                  whileHover={{ x: 5 }}
-                  href="https://www.facebook.com/pierogarnianakaszczorku"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-4 px-10 py-5 bg-[#1877F2] text-white rounded-full font-bold shadow-xl transition-all"
-                >
-                  <Facebook size={24} />
-                  <span>Obserwuj nas</span>
-                  <ArrowRight size={20} />
-                </motion.a>
+              <div className="space-y-10">
+                <div className="group">
+                  <p className="text-sm uppercase tracking-widest text-rustic-accent mb-2 font-bold font-sans">{c?.hours_label || 'Godziny Gościnności'}</p>
+                  <div className="flex items-start gap-4">
+                    <Clock size={20} className="text-rustic-brown mt-1 shrink-0" />
+                    <div className="text-lg text-rustic-dark font-serif">
+                      <p className="flex justify-between gap-4 mb-1"><span>{c?.hours_days || 'Pon - Nd:'}</span> <span className="font-bold">{c?.hours_time || '11:00 - 19:00'}</span></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <motion.a
+                    whileHover={{ x: 5 }}
+                    href="https://www.facebook.com/pierogarnianakaszczorku"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-4 px-10 py-5 bg-[#1877F2] text-white rounded-full font-bold shadow-xl transition-all"
+                  >
+                    <Facebook size={24} />
+                    <span>{c?.facebook_follow_label || 'Obserwuj nas'}</span>
+                    <ArrowRight size={20} />
+                  </motion.a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="relative group min-h-[500px]">
-          <div className="absolute inset-0 bg-rustic-brown transform rotate-2 rounded-3xl -z-10 transition-transform group-hover:rotate-1" />
-          <div className="h-full rounded-2xl overflow-hidden shadow-2xl border-[12px] border-white">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2400.669019862265!2d18.694886212709505!3d53.00833539984403!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ccb100d560067%3A0xb324e78759e1080a!2sDo%C5%BCynkowa%209C%2C%2087-162%20Toru%C5%84!5e0!3m2!1spl!2spl!4v1778146675909!5m2!1spl!2spl" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={true} 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <div className="relative group min-h-[500px]">
+            <div className="absolute inset-0 bg-rustic-brown transform rotate-2 rounded-3xl -z-10 transition-transform group-hover:rotate-1" />
+            <div className="h-full rounded-2xl overflow-hidden shadow-2xl border-[12px] border-white">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2400.669019862265!2d18.694886212709505!3d53.00833539984403!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ccb100d560067%3A0xb324e78759e1080a!2sDo%C5%BCynkowa%209C%2C%2087-162%20Toru%C5%84!5e0!3m2!1spl!2spl!4v1778146675909!5m2!1spl!2spl"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
-const Hero = ({ onOrderClick }: { onOrderClick: () => void }) => (
-  <header className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
-    <div className="absolute inset-0 z-0 text-white">
-      <img 
-        src="https://iili.io/BZtxBDu.md.jpg" 
-        alt="Pierogi Background" 
-        className="w-full h-full object-cover brightness-50"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-rustic-cream via-transparent to-transparent opacity-60" />
-      <div className="absolute inset-0 bg-rustic-dark/30" />
-    </div>
+const Hero = ({ onOrderClick }: { onOrderClick: () => void }) => {
+  const hero = config.hero;
+  return (
+    <header className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+      <div className="absolute inset-0 z-0 text-white">
+        <img
+          src="https://iili.io/BZtxBDu.md.jpg"
+          alt="Pierogi Background"
+          className="w-full h-full object-cover brightness-50"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-rustic-cream via-transparent to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-rustic-dark/30" />
+      </div>
 
-    <div className="max-w-7xl mx-auto px-6 relative z-10 w-full pt-20">
+      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full pt-20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="max-w-3xl"
+        >
+          <p className="font-cormorant italic text-rustic-beige text-2xl mb-6 tracking-widest uppercase">{hero?.eyebrow || 'Witamy w Pierogarni'}</p>
+          <h1 className="text-6xl md:text-8xl font-serif font-black text-white mb-8 leading-[0.95] tracking-tight">
+            {hero?.title_line1 || 'Domowa tradycja'} <br />
+            <span className="text-rustic-beige italic font-medium">{hero?.title_line2 || 'lepiona ręcznie.'}</span>
+          </h1>
+          <div className="flex flex-wrap gap-6 items-center">
+            <a href="#menu" className="group px-12 py-5 bg-rustic-beige text-rustic-dark rounded-full font-bold shadow-2xl hover:bg-white transition-all flex items-center gap-3">
+               {hero?.cta_menu_label || 'Nasza Karta'}
+               <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+            </a>
+            <button
+              onClick={onOrderClick}
+              className="px-10 py-5 bg-rustic-accent text-white rounded-full font-bold shadow-2xl hover:bg-rustic-dark transition-all flex items-center gap-3"
+            >
+              <ShoppingCart size={20} />
+              {hero?.cta_order_label || 'Złóż zamówienie'}
+            </button>
+          </div>
+        </motion.div>
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className="max-w-3xl"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-3"
       >
-        <p className="font-cormorant italic text-rustic-beige text-2xl mb-6 tracking-widest uppercase">Witamy w Pierogarni</p>
-        <h1 className="text-6xl md:text-8xl font-serif font-black text-white mb-8 leading-[0.95] tracking-tight">
-          Domowa tradycja <br />
-          <span className="text-rustic-beige italic font-medium">lepiona ręcznie.</span>
-        </h1>
-        <div className="flex flex-wrap gap-6 items-center">
-          <a href="#menu" className="group px-12 py-5 bg-rustic-beige text-rustic-dark rounded-full font-bold shadow-2xl hover:bg-white transition-all flex items-center gap-3">
-             Nasza Karta
-             <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-          </a>
-          <button 
-            onClick={onOrderClick}
-            className="px-10 py-5 bg-rustic-accent text-white rounded-full font-bold shadow-2xl hover:bg-rustic-dark transition-all flex items-center gap-3"
-          >
-            <ShoppingCart size={20} />
-            Złóż zamówienie
-          </button>
-        </div>
+        <span className="text-xs uppercase tracking-[0.4em] font-medium">{hero?.scroll_label || 'Przewiń'}</span>
+        <div className="w-px h-12 bg-white/30" />
       </motion.div>
-    </div>
+    </header>
+  );
+};
 
-    <motion.div 
-      animate={{ y: [0, 10, 0] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-3"
-    >
-      <span className="text-xs uppercase tracking-[0.4em] font-medium">Przewiń</span>
-      <div className="w-px h-12 bg-white/30" />
-    </motion.div>
-  </header>
-);
-
-const Footer = () => (
-  <footer className="py-24 bg-rustic-dark text-rustic-beige relative">
-    <div className="max-w-7xl mx-auto px-6 text-white">
-      <div className="grid md:grid-cols-4 gap-16 mb-20 text-rustic-beige">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-4 mb-8">
-            <img src="https://iili.io/BZtFIX2.png" alt="Logo" className="w-12 h-12 rounded-full border border-white/20" />
-            <span className="font-serif font-bold text-2xl tracking-tighter">Pierogarnia na Kaszczorku</span>
+const Footer = () => {
+  const f = config.footer;
+  return (
+    <footer className="py-24 bg-rustic-dark text-rustic-beige relative">
+      <div className="max-w-7xl mx-auto px-6 text-white">
+        <div className="grid md:grid-cols-4 gap-16 mb-20 text-rustic-beige">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-4 mb-8">
+              <img src="https://iili.io/BZtFIX2.png" alt="Logo" className="w-12 h-12 rounded-full border border-white/20" />
+              <span className="font-serif font-bold text-2xl tracking-tighter">{f?.brand_name || 'Pierogarnia na Kaszczorku'}</span>
+            </div>
+            <p className="text-rustic-beige/60 max-w-sm leading-relaxed text-lg italic font-serif">
+              "{f?.tagline || 'Smak, który pamiętasz z dzieciństwa, serwowany codziennie w samym sercu toruńskiego Kaszczorka.'}"
+            </p>
           </div>
-          <p className="text-rustic-beige/60 max-w-sm leading-relaxed text-lg italic font-serif">
-            "Smak, który pamiętasz z dzieciństwa, serwowany codziennie w samym sercu toruńskiego Kaszczorka."
+
+          <div>
+            <h4 className="font-sans font-bold uppercase tracking-widest text-xs text-rustic-accent mb-8 text-white">{f?.nav_title || 'Nawigacja'}</h4>
+            <ul className="space-y-4 font-serif text-lg">
+              <li><a href="#menu" className="hover:text-white transition-colors">{f?.nav_menu_label || 'Karta Menu'}</a></li>
+              <li><a href="#gallery" className="hover:text-white transition-colors">{f?.nav_gallery_label || 'Galeria Zdjęć'}</a></li>
+              <li><a href="#contact" className="hover:text-white transition-colors">{f?.nav_contact_label || 'Odwiedź Nas'}</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-sans font-bold uppercase tracking-widest text-xs text-rustic-accent mb-8 text-white">{f?.contact_title || 'Kontakt'}</h4>
+             <ul className="space-y-4 font-serif text-lg opacity-80">
+              <li>{f?.phone || '789 779 658'}</li>
+              <li>{f?.address || 'Dożynkowa 9c, Toruń'}</li>
+              <li>{f?.hours || 'Pon - Nd: 11:00 - 19:00'}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-sm font-sans tracking-widest opacity-40 uppercase">
+            © {new Date().getFullYear()} {f?.copyright_text || 'Pierogarnia na Kaszczorku. Wszystkie prawa zastrzeżone.'}
           </p>
         </div>
-        
-        <div>
-          <h4 className="font-sans font-bold uppercase tracking-widest text-xs text-rustic-accent mb-8 text-white">Nawigacja</h4>
-          <ul className="space-y-4 font-serif text-lg">
-            <li><a href="#menu" className="hover:text-white transition-colors">Karta Menu</a></li>
-            <li><a href="#gallery" className="hover:text-white transition-colors">Galeria Zdjęć</a></li>
-            <li><a href="#contact" className="hover:text-white transition-colors">Odwiedź Nas</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-sans font-bold uppercase tracking-widest text-xs text-rustic-accent mb-8 text-white">Kontakt</h4>
-           <ul className="space-y-4 font-serif text-lg opacity-80">
-            <li>789 779 658</li>
-            <li>Dożynkowa 9c, Toruń</li>
-            <li>Pon - Nd: 11:00 - 19:00</li>
-          </ul>
-        </div>
       </div>
-
-      <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p className="text-sm font-sans tracking-widest opacity-40 uppercase">
-          © {new Date().getFullYear()} Pierogarnia na Kaszczorku. Wszystkie prawa zastrzeżone.
-        </p>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 const OrderSystem = ({ onBack }: { onBack: () => void }) => {
   const [cart, setCart] = useState<{ id: string, name: string, price: number, quantity: number }[]>([]);
   const [step, setStep] = useState<'menu' | 'details' | 'summary'>('menu');
   const [isSending, setIsSending] = useState(false);
-  const [orderDetails, setOrderDetails] = useState({ 
-    name: '', 
-    phone: '', 
-    street: '', 
-    building: '', 
-    apartment: '', 
-    city: '', 
-    notes: '' 
+  const [orderDetails, setOrderDetails] = useState({
+    name: '',
+    phone: '',
+    street: '',
+    building: '',
+    apartment: '',
+    city: '',
+    notes: ''
   });
+  const form = config.order_form;
 
   const isPhoneValid = /^\d{9}$/.test(orderDetails.phone.replace(/\s/g, ''));
 
@@ -840,12 +859,12 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
           <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 size={48} />
           </div>
-          <h2 className="text-4xl font-serif font-bold text-rustic-dark mb-4">Dziękujemy!</h2>
+          <h2 className="text-4xl font-serif font-bold text-rustic-dark mb-4">{form?.thank_you_title || 'Dziękujemy!'}</h2>
           <p className="text-xl text-rustic-brown mb-8 font-serif italic text-balance">
-            Zamówienie zostało wysłane pomyślnie! Powiadomienie trafiło na telefon właściciela.
+            {form?.thank_you_description || 'Zamówienie zostało wysłane pomyślnie! Powiadomienie trafiło na telefon właściciela.'}
           </p>
           <div className="bg-rustic-beige/30 rounded-2xl p-6 text-left mb-8">
-            <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-rustic-accent">Szczegóły zamówienia:</h3>
+            <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-rustic-accent">{form?.order_details_title || 'Szczegóły zamówienia:'}</h3>
             <p className="mb-2"><strong>Imię:</strong> {orderDetails.name}</p>
             <p className="mb-2"><strong>Telefon:</strong> {orderDetails.phone}</p>
             <p className="mb-2"><strong>Adres:</strong> {orderDetails.street} {orderDetails.building}{orderDetails.apartment ? `/${orderDetails.apartment}` : ''}, {orderDetails.city}</p>
@@ -863,11 +882,11 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
               </div>
             </div>
           </div>
-          <button 
+          <button
             onClick={onBack}
             className="px-10 py-4 bg-rustic-brown text-white rounded-full font-bold shadow-lg hover:bg-rustic-dark transition-all"
           >
-            Wróć do strony głównej
+            {form?.back_home_button || 'Wróć do strony głównej'}
           </button>
         </div>
       </div>
@@ -883,11 +902,14 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
             <button onClick={onBack} className="p-2 hover:bg-rustic-beige rounded-full transition-colors text-rustic-brown">
               <ChevronLeft size={24} />
             </button>
-            <h1 className="text-4xl font-serif font-bold text-rustic-dark">Zamówienie Online</h1>
+            <h1 className="text-4xl font-serif font-bold text-rustic-dark">{form?.page_title || 'Zamówienie Online'}</h1>
           </div>
 
           {step === 'menu' ? (
             <div className="space-y-12">
+              {ORDER_MENU.length === 0 && (
+                <p className="text-rustic-brown/60 italic font-serif">{config.menu_section?.empty_message || 'Brak dostępnych pozycji menu.'}</p>
+              )}
               {ORDER_MENU.map((cat, idx) => (
                 <div key={idx}>
                   <div className="mb-6 border-b border-rustic-brown/10 pb-2">
@@ -896,15 +918,15 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
                   </div>
                   <div className="grid gap-4">
                     {cat.items.map(item => (
-                      <div 
-                        key={item.id} 
+                      <div
+                        key={item.id}
                         className="bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between group"
                       >
                         <div className="flex-1 pr-4">
                           <h3 className="font-serif font-medium text-rustic-dark text-lg">{item.name}</h3>
                           <p className="text-rustic-accent font-bold">{item.price} zł</p>
                         </div>
-                        <button 
+                        <button
                           onClick={() => addToCart(item)}
                           className="w-10 h-10 bg-rustic-beige text-rustic-brown rounded-full flex items-center justify-center hover:bg-rustic-brown hover:text-white transition-all shadow-sm"
                         >
@@ -918,119 +940,119 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
             </div>
           ) : (
             <div className="bg-white rounded-3xl shadow-xl p-8">
-              <h2 className="text-2xl font-serif font-bold text-rustic-dark mb-8">Dane do dostawy</h2>
+              <h2 className="text-2xl font-serif font-bold text-rustic-dark mb-8">{form?.delivery_title || 'Dane do dostawy'}</h2>
               <div className="grid gap-6">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Twoje Imię</label>
-                  <input 
-                    type="text" 
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.name_label || 'Twoje Imię'}</label>
+                  <input
+                    type="text"
                     value={orderDetails.name}
                     onChange={(e) => setOrderDetails(prev => ({ ...prev, name: e.target.value }))}
                     className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                    placeholder="Wpisz swoje imię..."
+                    placeholder={form?.name_placeholder || 'Wpisz swoje imię...'}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Numer Telefonu</label>
-                  <input 
-                    type="tel" 
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.phone_label || 'Numer Telefonu'}</label>
+                  <input
+                    type="tel"
                     value={orderDetails.phone}
                     onChange={(e) => setOrderDetails(prev => ({ ...prev, phone: e.target.value }))}
                     className={`w-full bg-rustic-beige/30 border-2 ${orderDetails.phone && !isPhoneValid ? 'border-red-400' : 'border-transparent'} focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif`}
-                    placeholder="Wpisz 9 cyfr..."
+                    placeholder={form?.phone_placeholder || 'Wpisz 9 cyfr...'}
                   />
                   {orderDetails.phone && !isPhoneValid && (
-                    <p className="text-red-500 text-xs mt-1 font-serif">Numer telefonu musi składać się z dokładnie 9 cyfr.</p>
+                    <p className="text-red-500 text-xs mt-1 font-serif">{form?.phone_error || 'Numer telefonu musi składać się z dokładnie 9 cyfr.'}</p>
                   )}
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Ulica</label>
-                    <input 
-                      type="text" 
+                    <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.street_label || 'Ulica'}</label>
+                    <input
+                      type="text"
                       value={orderDetails.street}
                       onChange={(e) => setOrderDetails(prev => ({ ...prev, street: e.target.value }))}
                       className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                      placeholder="Nazwa ulicy..."
+                      placeholder={form?.street_placeholder || 'Nazwa ulicy...'}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Nr budynku</label>
-                      <input 
-                        type="text" 
+                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.building_label || 'Nr budynku'}</label>
+                      <input
+                        type="text"
                         value={orderDetails.building}
                         onChange={(e) => setOrderDetails(prev => ({ ...prev, building: e.target.value }))}
                         className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                        placeholder="Np. 9C"
+                        placeholder={form?.building_placeholder || 'Np. 9C'}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Nr lokalu</label>
-                      <input 
-                        type="text" 
+                      <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.apartment_label || 'Nr lokalu'}</label>
+                      <input
+                        type="text"
                         value={orderDetails.apartment}
                         onChange={(e) => setOrderDetails(prev => ({ ...prev, apartment: e.target.value }))}
                         className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                        placeholder="Opcjonalnie"
+                        placeholder={form?.apartment_placeholder || 'Opcjonalnie'}
                       />
                     </div>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Miasto</label>
-                  <input 
-                    type="text" 
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.city_label || 'Miasto'}</label>
+                  <input
+                    type="text"
                     value={orderDetails.city}
                     onChange={(e) => setOrderDetails(prev => ({ ...prev, city: e.target.value }))}
                     className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                    placeholder="Miejscowość..."
+                    placeholder={form?.city_placeholder || 'Miejscowość...'}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">Uwagi (opcjonalnie)</label>
-                  <input 
-                    type="text" 
+                  <label className="block text-xs uppercase tracking-widest text-rustic-accent mb-2 font-bold">{form?.notes_label || 'Uwagi (opcjonalnie)'}</label>
+                  <input
+                    type="text"
                     value={orderDetails.notes}
                     onChange={(e) => setOrderDetails(prev => ({ ...prev, notes: e.target.value }))}
                     className="w-full bg-rustic-beige/30 border-2 border-transparent focus:border-rustic-brown rounded-2xl px-6 py-4 outline-none transition-all font-serif"
-                    placeholder="Dodatkowe informacje..."
+                    placeholder={form?.notes_placeholder || 'Dodatkowe informacje...'}
                   />
                 </div>
 
                 <div className="bg-rustic-beige/20 p-6 rounded-2xl border border-rustic-brown/10">
                   <div className="flex items-center gap-3 text-rustic-dark mb-2">
                     <CheckCircle2 size={20} className="text-rustic-accent" />
-                    <span className="font-serif font-bold italic">Metoda płatności</span>
+                    <span className="font-serif font-bold italic">{form?.payment_title || 'Metoda płatności'}</span>
                   </div>
                   <p className="text-sm text-rustic-brown font-serif">
-                    Płatność odbywa się **wyłącznie przy odbiorze** zamówienia. Możesz zapłacić gotówką lub kartą u dostawcy.
+                    {form?.payment_description || 'Płatność odbywa się wyłącznie przy odbiorze zamówienia. Możesz zapłacić gotówką lub kartą u dostawcy.'}
                   </p>
                 </div>
 
                 <div className="flex gap-4 pt-4">
-                  <button 
+                  <button
                     onClick={() => setStep('menu')}
                     disabled={isSending}
                     className="flex-1 py-4 border-2 border-rustic-brown text-rustic-brown rounded-full font-bold hover:bg-rustic-beige transition-all disabled:opacity-50"
                   >
                     Wróć do menu
                   </button>
-                  <button 
+                  <button
                     onClick={handleFinalize}
                     disabled={
                       isSending ||
-                      !orderDetails.name || 
-                      !isPhoneValid || 
-                      !orderDetails.street || 
-                      !orderDetails.building || 
+                      !orderDetails.name ||
+                      !isPhoneValid ||
+                      !orderDetails.street ||
+                      !orderDetails.building ||
                       !orderDetails.city
                     }
                     className="flex-[2] py-4 bg-rustic-brown text-white rounded-full font-bold hover:bg-rustic-dark transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isSending ? (
                       <>
-                        <motion.div 
+                        <motion.div
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
@@ -1052,13 +1074,13 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
           <div className="bg-white sticky top-32 rounded-3xl shadow-xl p-8 border border-rustic-brown/5 overflow-hidden">
             <div className="flex items-center gap-2 mb-6">
               <ShoppingCart className="text-rustic-accent" size={24} />
-              <h2 className="text-xl font-serif font-bold text-rustic-dark">Twój Koszyk</h2>
+              <h2 className="text-xl font-serif font-bold text-rustic-dark">{form?.cart_title || 'Twój Koszyk'}</h2>
             </div>
 
             <div className="max-h-[50vh] overflow-y-auto mb-8 pr-2 custom-scrollbar">
               {cart.length === 0 ? (
                 <div className="text-center py-10">
-                  <p className="text-rustic-brown/40 italic font-serif">Twój koszyk jest pusty...</p>
+                  <p className="text-rustic-brown/40 italic font-serif">{form?.cart_empty_message || 'Twój koszyk jest pusty...'}</p>
                 </div>
               ) : (
                 <div className="grid gap-6">
@@ -1093,9 +1115,9 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
                 <span className="text-rustic-brown uppercase tracking-widest text-xs font-bold">Łącznie</span>
                 <span className="text-2xl font-serif font-bold text-rustic-dark">{total} zł</span>
               </div>
-              
+
               {step === 'menu' && (
-                <button 
+                <button
                   onClick={() => setStep('details')}
                   disabled={cart.length === 0}
                   className="w-full py-4 bg-rustic-accent text-white rounded-full font-bold shadow-xl hover:bg-rustic-dark transition-all disabled:opacity-50 disabled:grayscale"
@@ -1113,6 +1135,8 @@ const OrderSystem = ({ onBack }: { onBack: () => void }) => {
 
 export default function App() {
   const [view, setView] = useState<'home' | 'order'>('home');
+  const ctaSection = config.cta_section;
+  const story = config.story;
 
   if (view === 'order') {
     return <OrderSystem onBack={() => setView('home')} />;
@@ -1123,29 +1147,29 @@ export default function App() {
       <Navbar onOrderClick={() => setView('order')} />
       <main>
         <Hero onOrderClick={() => setView('order')} />
-        
+
         <section className="py-32 px-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-dot-pattern opacity-[0.03] pointer-events-none" />
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-20 relative z-10">
              <div className="md:w-1/2 relative group">
                 <div className="absolute inset-0 bg-rustic-beige rounded-[40px] -rotate-3 transition-transform group-hover:rotate-0" />
-                <img 
-                  src="https://iili.io/BZt3K9j.md.jpg" 
-                  alt="Wnętrze" 
+                <img
+                  src="https://iili.io/BZt3K9j.md.jpg"
+                  alt="Wnętrze"
                   className="rounded-[40px] shadow-2xl relative z-10 w-full aspect-[4/5] object-cover border-4 border-white"
                 />
              </div>
              <div className="md:w-1/2">
-                <p className="font-cormorant italic text-rustic-brown text-2xl mb-6">Nasza Historia</p>
+                <p className="font-cormorant italic text-rustic-brown text-2xl mb-6">{story?.eyebrow || 'Nasza Historia'}</p>
                 <h2 className="text-5xl md:text-6xl font-serif font-bold text-rustic-dark mb-8 leading-tight">
-                   Więcej niż kulinaria.<br />To nasze życie.
+                   {story?.title || 'Więcej niż kulinaria. To nasze życie.'}
                 </h2>
                 <div className="space-y-6 text-xl text-rustic-dark/80 font-serif leading-relaxed italic">
                   <p>
-                    „Dla nas każda lepiona sztuka to osobna historia. Nie uznajemy skrótów, dlatego składniki wybieramy tak, jakbyśmy robili je dla własnej rodziny.”
+                    {story?.paragraph1 || '„Dla nas każda lepiona sztuka to osobna historia. Nie uznajemy skrótów, dlatego składniki wybieramy tak, jakbyśmy robili je dla własnej rodziny.”'}
                   </p>
                   <p>
-                    Kaszczorek to miejsce, gdzie czas płynie wolniej. Nasza pierogarnia oddaje ten klimat – jest swojsko, smacznie i zawsze z uśmiechem.
+                    {story?.paragraph2 || 'Kaszczorek to miejsce, gdzie czas płynie wolniej. Nasza pierogarnia oddaje ten klimat – jest swojsko, smacznie i zawsze z uśmiechem.'}
                   </p>
                 </div>
                 <div className="mt-12 flex gap-4">
@@ -1157,21 +1181,21 @@ export default function App() {
         </section>
 
         <PaperMenu />
-        
+
         <section className="py-24 bg-white">
           <div className="max-w-4xl mx-auto px-6 text-center">
              <div className="bg-rustic-beige/50 p-12 md:p-20 rounded-[3rem] border border-rustic-brown/10 shadow-inner">
                 <UtensilsCrossed className="mx-auto mb-8 text-rustic-accent" size={48} />
-                <h2 className="text-4xl md:text-5xl font-serif font-bold text-rustic-dark mb-6">Zgłodniałeś?</h2>
+                <h2 className="text-4xl md:text-5xl font-serif font-bold text-rustic-dark mb-6">{ctaSection?.title || 'Zgłodniałeś?'}</h2>
                 <p className="text-xl text-rustic-brown mb-10 font-serif italic max-w-2xl mx-auto">
-                  Zamów nasze domowe przysmaki bezpośrednio do swojego domu. Świeże, gorące i lepione z pasją.
+                  {ctaSection?.description || 'Zamów nasze domowe przysmaki bezpośrednio do swojego domu. Świeże, gorące i lepione z pasją.'}
                 </p>
-                <button 
+                <button
                   onClick={() => setView('order')}
                   className="px-12 py-6 bg-rustic-accent text-white rounded-full font-bold text-xl shadow-2xl hover:bg-rustic-dark transition-all flex items-center gap-4 mx-auto group"
                 >
                   <ShoppingCart size={24} className="group-hover:scale-110 transition-transform" />
-                  Przejdź do zamawiania
+                  {ctaSection?.button_label || 'Przejdź do zamawiania'}
                   <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
                 </button>
              </div>
@@ -1186,4 +1210,3 @@ export default function App() {
     </div>
   );
 }
-
