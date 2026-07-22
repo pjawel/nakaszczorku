@@ -101,6 +101,7 @@ collections:
                 widget: "list"
                 field:
                   label: "Zdjęcie"
+                  name: "image"
                   widget: "image"
 
           - label: "Cytat / Opinia"
@@ -116,6 +117,7 @@ collections:
             widget: "list"
             field:
               label: "Skan"
+              name: "image"
               widget: "image"
 
           - label: "Galeria Zdjęć"
@@ -123,6 +125,7 @@ collections:
             widget: "list"
             field:
               label: "Zdjęcie"
+              name: "image"
               widget: "image"
 
           - label: "Menu do Zamówień"
