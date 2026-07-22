@@ -29,15 +29,15 @@ import {
 
 // --- Constants ---
 const MENU_IMAGES = [
-  '/uploads/menu1',
-  '/uploads/menu2',
-  '/uploads/menu3',
-  '/uploads/menu4',
-  '/uploads/menu5',
-  '/uploads/menu6',
-  '/uploads/menu7',
-  '/uploads/menu8',
-  '/uploads/menu9'
+  '/uploads/menu1.jpg',
+  '/uploads/menu2.jpg',
+  '/uploads/menu3.jpg',
+  '/uploads/menu4.jpg',
+  '/uploads/menu5.jpg',
+  '/uploads/menu6.jpg',
+  '/uploads/menu7.jpg',
+  '/uploads/menu8.jpg',
+  '/uploads/menu9.jpg'
 ];
 
 const GALLERY_IMAGES = [
