@@ -110,14 +110,14 @@ collections:
                 name: "quote"
                 widget: "text"
 
-- label: "Skany Papierowego Menu (Książka 3D)"
-  name: "menu_images"
-  widget: "list"
-  summary: '{{fields.image}}'
-  field: 
-    label: "Skan"
-    name: "image"
-    widget: "image"
+          - label: "Skany Papierowego Menu (Książka 3D)"
+            name: "menu_images"
+            widget: "list"
+            summary: "{{fields.image}}"
+            field:
+              label: "Skan"
+              name: "image"
+              widget: "image"
 
           - label: "Galeria Zdjęć"
             name: "gallery_images"
