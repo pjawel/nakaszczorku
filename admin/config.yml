@@ -1,301 +1,79 @@
 # ==========================================
-# KONFIGURACJA PIEROGARNI NA KASZCZORKU
+# KONFIGURACJA DECAP CMS (NETLIFY CMS)
 # ==========================================
 
-# --- Webhook do zamówień (Make.com) ---
-webhookUrl: "https://hook.eu1.make.com/5kir8yq9nvnzln131kr83bmarlcwe492"
+# 1. Konfiguracja backendu (połączenie z GitHub)
+backend:
+  name: github
+  repo: TWOJA_NAZWA_UZYTKOWNIKA/NAZWA_REPOZYTORIUM # <-- Zmień na nazwę swojego repozytorium
+  branch: main # lub master
 
-# --- Dane kontaktowe i podstawowe ---
-info:
-  title: "Pierogarnia na Kaszczorku"
-  phone: "789 779 658"
-  address:
-    street: "Dożynkowa 9c"
-    city: "87-100 Toruń"
-  hours: "Pon - Nd: 11:00 - 19:00"
-  facebookUrl: "https://www.facebook.com/pierogarnianakaszczorku"
-  facebookReviewsUrl: "https://www.facebook.com/pierogarnianakaszczorku/reviews/?id=100057447759306&sk=reviews"
-  googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2400.669019862265!2d18.694886212709505!3d53.00833539984403!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ccb100d560067%3A0xb324e78759e1080a!2sDo%C3%BCynkowa%209C%2C%2087-162%20Toru%C3%B1!5e0!3m2!1spl!2spl!4v1778146675909!5m2!1spl!2spl"
+# 2. Folder na przesłane zdjęcia/pliki
+media_folder: "public/uploads"
+public_folder: "/uploads"
 
-# --- Teksty i nagłówki ---
-hero:
-  subtitle: "Witamy w Pierogarni"
-  title_line1: "Domowa tradycja"
-  title_line2: "lepiona ręcznie."
-  bg_image: "https://iili.io/BZtxBDu.md.jpg"
+# 3. Dodatkowa konfiguracja biblioteki mediów
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demopublickey
 
-story:
-  subtitle: "Nasza Historia"
-  title: "Więcej niż kulinaria.\nTo nasze życie."
-  paragraph1: "„Dla nas każda lepiona sztuka to osobna historia. Nie uznajemy skrótów, dlatego składniki wybieramy tak, jakbyśmy robili je dla własnej rodziny.”"
-  paragraph2: "Kaszczorek to miejsce, gdzie czas płynie wolniej. Nasza pierogarnia oddaje ten klimat – jest swojsko, smacznie i zawsze z uśmiechem."
-  main_image: "https://iili.io/BZt3K9j.md.jpg"
-  sub_images:
-    - "https://iili.io/BZt3BtV.md.jpg"
-    - "https://iili.io/BZt39M7.md.jpg"
+# 4. Struktura pól w panelu administracyjnym
+collections:
+  - name: "settings"
+    label: "Ustawienia strony"
+    files:
+      - file: "src/data/config.yml" # Scieżka do Twoich danych
+        label: "Zawartość i Menu Pierogarni"
+        name: "site_config"
+        fields:
+          - { label: "URL Webhooka (Make.com)", name: "webhookUrl", widget: "string" }
+          
+          # --- Informacje podstawowe ---
+          - label: "Informacje kontaktowe"
+            name: "info"
+            widget: "object"
+            fields:
+              - { label: "Nazwa restauracji", name: "title", widget: "string" }
+              - { label: "Telefon", name: "phone", widget: "string" }
+              - label: "Adres"
+                name: "address"
+                widget: "object"
+                fields:
+                  - { label: "Ulica", name: "street", widget: "string" }
+                  - { label: "Miasto", name: "city", widget: "string" }
+              - { label: "Godziny otwarcia", name: "hours", widget: "string" }
+              - { label: "Link do Facebooka", name: "facebookUrl", widget: "string" }
+              - { label: "Link do opinii FB", name: "facebookReviewsUrl", widget: "string" }
+              - { label: "Link Embed Mapy Google", name: "googleMapsEmbedUrl", widget: "text" }
 
-review:
-  quote: "Najlepsze pierogi jakie jadłem w Toruniu! Czuć, że są robione z sercem i tradycją. Kaszczorek ma swój kulinarny skarb, do którego wracamy całą rodziną."
+          # --- Teksty i nagłówki ---
+          - label: "Sekcja Hero (Nagłówek)", name: "hero", widget: "object", fields:
+              - { label: "Podtytuł", name: "subtitle", widget: "string" }
+              - { label: "Tytuł - linia 1", name: "title_line1", widget: "string" }
+              - { label: "Tytuł - linia 2", name: "title_line2", widget: "string" }
+              - { label: "Tło (Zdjęcie)", name: "bg_image", widget: "image" }
 
-# --- Skany Papierowego Menu (Książka 3D) ---
-menu_images:
-  - "https://iili.io/BZtKbwv.md.jpg"
-  - "https://iili.io/BZtKmtR.md.jpg"
-  - "https://iili.io/BZtKynp.md.jpg"
-  - "https://iili.io/BZtKt9a.md.jpg"
-  - "https://iili.io/BZtfdFt.md.jpg"
-  - "https://iili.io/BZtfqNf.md.jpg"
-  - "https://iili.io/BZtfxPS.md.jpg"
-  - "https://iili.io/BZtfoV2.md.jpg"
-  - "https://iili.io/BZtfnol.md.jpg"
+          - label: "Sekcja O Nas (Historia)", name: "story", widget: "object", fields:
+              - { label: "Podtytuł", name: "subtitle", widget: "string" }
+              - { label: "Tytuł", name: "title", widget: "text" }
+              - { label: "Akapit 1", name: "paragraph1", widget: "text" }
+              - { label: "Akapit 2", name: "paragraph2", widget: "text" }
+              - { label: "Główne zdjęcie", name: "main_image", widget: "image" }
+              - { label: "Mniejsze zdjęcia", name: "sub_images", widget: "list", field: { label: "Zdjęcie", widget: "image" } }
 
-# --- Galeria Zdjęć ---
-gallery_images:
-  - "https://i.ibb.co/N6rFPRNb/490098609-1133131435278438-9034799108915560156-n.jpg"
-  - "https://i.ibb.co/Z1cbh81L/484545601-1108578554400393-1007995210073826491-n.jpg"
-  - "https://i.ibb.co/qSmRypH/490958902-1133131831945065-709802125607087134-n.jpg"
-  - "https://i.ibb.co/0RQ9cFhw/491777589-1133133478611567-6418680933429127759-n.jpg"
-  - "https://i.ibb.co/CKWLgKHK/490744091-1133132208611694-2420069354154011641-n.jpg"
-  - "https://i.ibb.co/FLWQtSHY/490699574-1133359301922318-8734503214837800421-n.jpg"
-  - "https://iili.io/BZtnTLx.md.jpg"
-  - "https://iili.io/BZt2YG9.md.jpg"
-  - "https://iili.io/BZt2w6F.md.jpg"
-  - "https://iili.io/BZt2eaa.md.jpg"
-  - "https://iili.io/BZt2Ujp.md.jpg"
-  - "https://iili.io/BZt2Q8G.md.jpg"
-  - "https://iili.io/BZt3dFe.md.jpg"
-  - "https://iili.io/BZt32cu.md.jpg"
-  - "https://iili.io/BZt39M7.md.jpg"
-  - "https://iili.io/BZt3K9j.md.jpg"
-  - "https://iili.io/BZt3BtV.md.jpg"
+          - label: "Cytat / Opinia", name: "review", widget: "object", fields:
+              - { label: "Treść opinii", name: "quote", widget: "text" }
 
-# --- Menu Zamówień Online ---
-order_menu:
-  - category: "Zupy"
-    items:
-      - id: "szurpa"
-        name: "Szurpa"
-        price: 22
-      - id: "charczo"
-        name: "Charczo"
-        price: 19
-      - id: "barszcz-ukr"
-        name: "Barszcz ukraiński"
-        price: 18
-      - id: "barszcz-piel"
-        name: "Barszcz z pielmieni"
-        price: 17
-      - id: "rosol-piel"
-        name: "Rosół z pielmieni"
-        price: 16
-      - id: "rosol-mak"
-        name: "Rosół z makaronem"
-        price: 10
-      - id: "barszcz-picie"
-        name: "Barszcz do picia"
-        price: 9
+          # --- Zdjęcia (Skan menu + Galeria) ---
+          - label: "Skany Papierowego Menu (Książka 3D)", name: "menu_images", widget: "list", field: { label: "Skan", widget: "image" }
+          - label: "Galeria Zdjęć", name: "gallery_images", widget: "list", field: { label: "Zdjęcie", widget: "image" }
 
-  - category: "Dania główne"
-    items:
-      - id: "poledwiczka"
-        name: "Soczysta polędwiczka z warzywami w zestawie z opieczonymi ziemniaczkami i surówką"
-        price: 42
-      - id: "kurczak-grill"
-        name: "Grillowany filet kurczaka z frytkami i surówką"
-        price: 38
-      - id: "schabowe"
-        name: "Schabowe z ziemniakami i surówką"
-        price: 33
-
-  - category: "Ryby z patelni"
-    description: "w zestawie z ziemniakami albo frytkami i surówką"
-    items:
-      - id: "pstrog"
-        name: "Pstrąg łososiowy"
-        price: 34
-      - id: "dorsz"
-        name: "Dorsz filet w panierce"
-        price: 34
-      - id: "halibut"
-        name: "Halibut"
-        price: 42
-      - id: "losos"
-        name: "Łosoś filet"
-        price: 42
-
-  - category: "Placki ziemniaczane"
-    items:
-      - id: "placki-gulasz"
-        name: "Placki ziemniaczane z gulaszem"
-        price: 27
-      - id: "placki-smietana"
-        name: "Placki ziemniaczane ze śmietaną"
-        price: 23
-
-  - category: "Krokiety z sosem"
-    items:
-      - id: "krokiet-kurczak"
-        name: "Krokiety z kurczakiem i mozzarellą (2szt)"
-        price: 25
-      - id: "krokiet-pieczarki"
-        name: "Krokiety z pieczarkami i mozzarellą (2szt)"
-        price: 25
-      - id: "krokiet-szpinak"
-        name: "Krokiety ze szpinakiem i fetą (2szt)"
-        price: 25
-      - id: "krokiet-kapusta"
-        name: "Krokiety z kapustą i grzybami (2szt)"
-        price: 25
-      - id: "nalesniki-twarog"
-        name: "Naleśniki z twarogiem (2szt)"
-        price: 25
-
-  - category: "Czeburek z sosem"
-    items:
-      - id: "czeburek-miesto"
-        name: "Czeburek z mięsem (wieprzowina)"
-        price: 16
-      - id: "czeburek-kurczak-ser"
-        name: "Czeburek z kurczakiem i serem"
-        price: 16
-      - id: "czeburek-kurczak-grzyby"
-        name: "Czeburek z kurczakiem i grzybami"
-        price: 16
-      - id: "czeburek-wedzony"
-        name: "Czeburek z wędzonym serem i suszonymi pomidorami"
-        price: 16
-
-  - category: "Pierogi"
-    items:
-      - id: "pierogi-miks"
-        name: "Miks (5 dowolnych pierogow)"
-        price: 29
-      - id: "pierogi-miesto"
-        name: "Pierogi z mięsem"
-        price: 28
-      - id: "pierogi-kurczak-ser"
-        name: "Pierogi z kurczakiem i serem"
-        price: 24
-      - id: "pierogi-kurczak-meksyk"
-        name: "Pierogi z kurczakiem po meksykańsku"
-        price: 24
-      - id: "pierogi-ruskie"
-        name: "Pierogi ruskie"
-        price: 24
-      - id: "pierogi-ruskie-boczek"
-        name: "Rusek z boczkiem"
-        price: 24
-      - id: "pierogi-kapusta-grzyby"
-        name: "Pierogi z kapustą i grzybami"
-        price: 24
-      - id: "pierogi-pieczarki"
-        name: "Pierogi z pieczarkami"
-        price: 24
-      - id: "pierogi-pieczarki-ser"
-        name: "Pierogi z pieczarkami i serem"
-        price: 24
-      - id: "pierogi-szpinak-feta"
-        name: "Pierogi ze szpinakiem i fetą"
-        price: 24
-      - id: "pierogi-soczewica"
-        name: "Pierogi z soczewicą (wege)"
-        price: 25
-      - id: "pierogi-twarog"
-        name: "Pierogi z twarogiem"
-        price: 23
-      - id: "pierogi-twarog-owoce"
-        name: "Pierogi z twarogiem i owocami"
-        price: 25
-      - id: "pierogi-owoce"
-        name: "Pierogi z owocami"
-        price: 25
-
-  - category: "Pielmieni"
-    items:
-      - id: "pielmieni-miks"
-        name: "Miks pielmieni (15szt)"
-        price: 32
-      - id: "pielmieni-wol-wieprz"
-        name: "Pielmieni z wołowiną i wieprzowiną"
-        price: 28
-      - id: "pielmieni-indyk-wol"
-        name: "Pielmieni z indykiem i wołowiną"
-        price: 28
-      - id: "pielmieni-soczewica-borowik"
-        name: "Pielmieni z soczewicą i borowikiem"
-        price: 27
-      - id: "pielmieni-borowik-pieczarka"
-        name: "Pielmieni z borowikiem i pieczarką"
-        price: 30
-
-  - category: "Chinkali"
-    items:
-      - id: "chinkali-wol-wieprz"
-        name: "Chinkali z wołowiną i wieprzowiną"
-        price: 35
-
-  - category: "Dla dzieci"
-    items:
-      - id: "dziecko-schabowy"
-        name: "Schabowe z kurczaka z ziemniakami i surówką"
-        price: 33
-      - id: "dziecko-schabowy-frytki"
-        name: "Schabowe z kurczaka z frytkami i surówką"
-        price: 33
-      - id: "dziecko-naggetsy"
-        name: "Frytki i nuggetsy"
-        price: 25
-      - id: "dziecko-stripsy"
-        name: "Stripsy z kurczaka i frytki"
-        price: 30
-      - id: "dziecko-leniwe"
-        name: "Pierogi leniwe (15szt)"
-        price: 22
-      - id: "dziecko-twarog"
-        name: "Pierogi z twarogiem"
-        price: 23
-      - id: "dziecko-nalesniki-twarog"
-        name: "Naleśniki z twarogiem (2szt)"
-        price: 23
-      - id: "dziecko-nalesniki-nutella"
-        name: "Naleśniki z nutellą albo dżemem (3szt)"
-        price: 23
-
-  - category: "Napoje"
-    items:
-      - id: "cola"
-        name: "Cola"
-        price: 8
-      - id: "fanta"
-        name: "Fanta"
-        price: 8
-      - id: "sprite"
-        name: "Sprite"
-        price: 8
-      - id: "sok-j"
-        name: "Sok jabłkowy"
-        price: 6
-      - id: "sok-p"
-        name: "Sok pomarańczowy"
-        price: 6
-      - id: "sok-m"
-        name: "Sok multiwitamina"
-        price: 6
-      - id: "woda-gaz"
-        name: "Woda gazowana"
-        price: 5
-      - id: "woda-ngaz"
-        name: "Woda niegazowana"
-        price: 5
-
-  - category: "Dodatki"
-    items:
-      - id: "surowka"
-        name: "surówka"
-        price: 8
-      - id: "ziemniaki"
-        name: "ziemniaki"
-        price: 8
-      - id: "frytki"
-        name: "frytki"
-        price: 10
+          # --- Karta Menu (Zamówienia) ---
+          - label: "Menu do Zamówień", name: "order_menu", widget: "list", fields:
+              - { label: "Nazwa kategorii", name: "category", widget: "string" }
+              - { label: "Opis kategorii (opcjonalny)", name: "description", widget: "string", required: false }
+              - label: "Dania", name: "items", widget: "list", fields:
+                  - { label: "ID dania (unikalne, np. pierogi-ruskie)", name: "id", widget: "string" }
+                  - { label: "Nazwa dania", name: "name", widget: "string" }
+                  - { label: "Cena (zł)", name: "price", widget: "number", value_type: "int" }
