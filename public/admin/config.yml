@@ -20,3 +20,34 @@ logo_url: https://decapbridge.com/decapcms-with-bridge.svg
 
 # Add site links in Decap CMS (optional)
 site_url: https://pierogarniawkaszczorku.pl
+
+# -------------------------------------------------------------
+# REQUIRED MISSING PROPERTIES (This solves your error):
+# -------------------------------------------------------------
+
+# Where uploaded images will be saved in your GitHub repository
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# Define the collections/pages your client can edit
+collections:
+  - name: "pages"
+    label: "Strony"
+    files:
+      - file: "src/data/site_info.json"
+        label: "Informacje o stronie"
+        name: "site_info"
+        fields:
+          - { label: "Nazwa", name: "name", widget: "string" }
+          - { label: "Opis", name: "description", widget: "text" }
+
+  - name: "menu"
+    label: "Menu (Pierogi)"
+    folder: "src/content/menu"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nazwa dania", name: "title", widget: "string" }
+      - { label: "Cena (PLN)", name: "price", widget: "number", value_type: "float" }
+      - { label: "Opis", name: "description", widget: "text" }
+      - { label: "Zdjęcie", name: "image", widget: "image", required: false }
