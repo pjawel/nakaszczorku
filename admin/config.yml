@@ -4,7 +4,10 @@
 
 backend:
   name: git-gateway
-  branch: main # lub master
+  repo: pjawel/nakaszczorku
+  branch: main
+  identity_url: https://auth.decapbridge.com/sites/92bf7f64-262e-47b1-8c80-7c3c32dc8b8e
+  gateway_url: https://gateway.decapbridge.com
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
