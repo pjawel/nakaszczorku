@@ -1,0 +1,33 @@
+info:
+  title: "Pierogarnia na Kaszczorku"
+  phone: ""
+  address:
+    street: ""
+    city: "Toruń"
+  hours: ""
+  facebookUrl: ""
+  facebookReviewsUrl: ""
+  googleMapsEmbedUrl: ""
+
+hero:
+  subtitle: ""
+  title_line1: ""
+  title_line2: ""
+  bg_image: ""
+
+story:
+  subtitle: ""
+  title: ""
+  paragraph1: ""
+  paragraph2: ""
+  main_image: ""
+  sub_images: []
+
+review:
+  quote: ""
+
+menu_images: []
+
+gallery_images: []
+
+order_menu: []
