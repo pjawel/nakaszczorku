@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Content Management System</title>
-    <!-- Netlify Identity Widget for Authentication -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <!-- React (needed to define custom preview components below) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <title>Panel Administracyjny</title>
   </head>
   <body>
+    <!-- Decap CMS Script -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    
+    <script>
+      // Disable previews globally for all templates
+      CMS.registerPreviewTemplate('menu', () => null);
+    </script>
   </body>
 </html>
