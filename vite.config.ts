@@ -5,14 +5,9 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
-  
-  // In development, serve from root '/'.
-  // For production builds, serve using relative paths './' to work perfectly
-  // on both the custom root domain (pierogarniawkaszczorku.pl) and subpaths (GitHub Pages).
-  const base = mode === 'development' ? '/' : './';
-
   return {
-    base,
+    // Ustawiamy base na nazwę Twojego repozytorium na GitHubie
+    base: '/piwnicapodzaba/',
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
